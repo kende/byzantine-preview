@@ -1,6 +1,6 @@
-# geode-preview
+# byzantine-preview
 
-> A preview site for Geode.cool
+> A polychain cryptoeconomic network for shared discovery.
 
 ## Build Setup
 

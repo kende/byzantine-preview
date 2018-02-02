@@ -10,7 +10,7 @@
           <div class="slogan">A polychain cryptoeconomic network for shared discovery, creativity, and gameplay in any environment</div>
         </div>
         <div class="gallery-img-mobile">
-          <img src="~assets/byzantine-bk.png" alt="geode logo">
+          <img src="~assets/byzantine-bk.png" alt="byzantine background">
         </div>
         <div class="page-footer">
           <div class="copyright">

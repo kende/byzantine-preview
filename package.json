@@ -1,8 +1,8 @@
 {
-  "name": "geode-preview",
+  "name": "byzantine-preview",
   "version": "1.0.0",
-  "description": "A preview site for Geode.cool",
-  "author": "Jason Kende <jk@byzantine.network>",
+  "description": "A polychain cryptoeconomic network for shared discovery.",
+  "author": "Jason Kende <jk@byzantine.network> & Sam Hutch <sam@byzantine.network>",
   "private": true,
   "scripts": {
     "dev": "nuxt",
