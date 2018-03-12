@@ -13,11 +13,21 @@ html {
   -webkit-font-smoothing: antialiased;
   box-sizing: border-box;
   color: #424242;
+  font-size: 100%;
 }
 
 *, *:before, *:after {
   box-sizing: border-box;
   margin: 0;
   outline: none;
+}
+
+@font-face {
+  font-family: "arame-regular";
+  src: url("~/assets/fonts/arame-regular.woff") format("woff")
+}
+@font-face {
+  font-family: "rational-light";
+  src: url("~/assets/fonts/rational-light.woff") format("woff")
 }
 </style>
