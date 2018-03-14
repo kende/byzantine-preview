@@ -22,6 +22,10 @@ html {
   outline: none;
 }
 
+ul {
+  list-style: none;
+}
+
 @font-face {
   font-family: "arame-regular";
   src: url("~/assets/fonts/arame-regular.woff") format("woff")

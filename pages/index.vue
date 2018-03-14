@@ -1,13 +1,42 @@
 <template>
   <div class="home-page">
     <div class="container">
+      <div class="parallax-stars">
+        <div class="stars-group">
+          <div id="layer1" class="layer"><img class="stars" src="~assets/bk-stars-1.png" alt=""></div>
+          <div id="layer2" class="layer"><img class="stars" src="~assets/bk-stars-2.png" alt=""></div>
+        </div>
+      </div>
       <div class="content">
+        <nav class="navbar">
+          <div class="nav-item"><img class="logo" src="~assets/Byzantine-Logo-yellow.png" alt=""></div>
+          <div class="item-group">
+            <div class="nav-item">START QUEST</div>
+            <div class="nav-item">GET SPACE</div>
+          </div>
+        </nav> 
+        <section class="banner">
+          <div class="headline">SPACE</div>
+          <div class="headline">QUEST</div>
+          <div class="description">COLLECT THE MULTIVERSE</div>
+        </section>
+        <section class="explanation">
+          <div><img src="" alt=""></div>
+          <h4>What is this?</h4>
+          <p>What is this?</p>
+        </section>
+      </div>
+      <!-- 
+
+      -->
+      
+      <!-- <div class="content">
         <div class="logo-wrapper"><img class="logo" src="~assets/Byzantine-Logo.png" alt="Company logo"></div>
         <div class="description">DECENTRALIZED PLATFORMS AND SPACES</div>
       </div>
       <footer class="footer">
         cc Byzantine Inc. 2018
-      </footer>
+      </footer> -->
       <!-- <div class="page-content">
         <div class="page-header">
           <img class="geode-logo" src="~assets/geode-logo.png" alt="geode logo">
@@ -43,13 +72,122 @@
 </script>
 
 <style scoped>
-.container {
+.home-page {
+  perspective: 1px;
+  transform-style: preserve-3d;
+  height: 100vh;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+.parallax-stars {
+  height: 100vh;
+  overflow: hidden;
+}
+.content {
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.stars-group {
+  height: 100vh;
+  transform-style: preserve-3d;
+  background: #1E226B;
+}
+.layer {
+  position: absolute;
+  height: 100vh;
+  z-index: -1;
+}
+#layer1 {
+  transform: translateZ(0px) scale(1);
+}
+#layer2 {
+  transform: translateZ(.12px) scale(1);
+}
+.stars {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: .9;
+}
+
+.navbar {
   display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+  justify-content: space-between;
+  top: 0;
+  height: 10vh;
+  line-height: 10vh;
+}
+.logo {
+  margin: 1vh;
+  height: 8vh;
+}
+.item-group {
+  display: flex;
+}
+
+.banner {
+  height: 90vh;
+  text-align: center;
+  color: #fff;
+}
+
+.explanation {
+  height: 200vh;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+stify-content: center;
+  position: absolute;
+}
+
+
+
+.stars-wrapper {
+  
+}
+
+
+
+.stars {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .content {
+}
+ .content {
   flex: 1;
   text-align: center;
   display: flex;
@@ -87,10 +225,7 @@
     font-size: 1.2em;
   }
 }
-
-
-
-/* .page-content {
+.page-content {
   flex: 1 1 auto;
   padding: 24px;
 }
