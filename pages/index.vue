@@ -2,10 +2,10 @@
   <div class="home-page">
     <div class="container">
       <div class="parallax-stars">
-        <div class="stars-group">
+        <!-- <div class="stars-group"> -->
           <div id="layer1" class="layer"><img class="stars" src="~assets/bk-stars-1.png" alt=""></div>
           <div id="layer2" class="layer"><img class="stars" src="~assets/bk-stars-2.png" alt=""></div>
-        </div>
+        <!-- </div> -->
       </div>
       <div class="content">
         <nav class="navbar">
@@ -72,7 +72,8 @@
 </script>
 
 <style scoped>
-.home-page {
+.container {
+  background: #1E226B;
   perspective: 1px;
   transform-style: preserve-3d;
   height: 100vh;
@@ -81,48 +82,45 @@
 }
 
 .parallax-stars {
+  transform: translateZ(-.75px) scale(1.75);
   height: 100vh;
-  overflow: hidden;
+  transform-style: preserve-3d;
 }
+.layer {
+  position: absolute;
+  height: 100vh;
+}
+#layer1 {
+  transform: translateZ(-.5px) scale(1.28);
+}
+#layer2 {
+  transform: translateZ(-.25px) scale(1.14);
+}
+
+.stars {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+
 .content {
   position: absolute;
   top: 0;
   width: 100%;
 }
 
-.stars-group {
-  height: 100vh;
-  transform-style: preserve-3d;
-  background: #1E226B;
-}
-.layer {
-  position: absolute;
-  height: 100vh;
-  z-index: -1;
-}
-#layer1 {
-  transform: translateZ(0px) scale(1);
-}
-#layer2 {
-  transform: translateZ(.12px) scale(1);
-}
-.stars {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: .9;
-}
-
 .navbar {
   display: flex;
   justify-content: space-between;
   top: 0;
+  padding:  0 24px;
   height: 10vh;
   line-height: 10vh;
 }
 .logo {
-  margin: 1vh;
-  height: 8vh;
+  margin: 2vh;
+  height: 6vh;
 }
 .item-group {
   display: flex;
@@ -136,11 +134,8 @@
 
 .explanation {
   height: 200vh;
+  background: #fff;
 }
-
-
-
-
 
 
 
