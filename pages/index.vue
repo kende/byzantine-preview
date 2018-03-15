@@ -23,9 +23,10 @@
           </div>
         </section>
         <section class="explanation">
-          <div><img src="" alt=""></div>
-          <h4>What is this?</h4>
-          <p>What is this?</p>
+          <div class="star-icon"><img src="~assets/large-star.png" alt="star" height="40" width="40"></div>
+          <h4 class="section-subtitle">What is this?</h4>
+          <p class="answer">The Byzantine Space Quest is the first of many quests in our multiverse that spans the digital and physical worlds. Your first quest? Collect and trade digital space - starting in outer space!</p>
+          <p class="answer">For every tile purchased, you'll be contributing .02 ETH of the transfer price for connecting our world with <a href="#">mesh networks</a>, receive a physical tile in the form of an enamel pin, and see your tile across the digital and physical worlds in installations throughout <a href="#">Byzantine</a>'s space.</p>
         </section>
       </div>
       <!-- 
