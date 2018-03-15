@@ -6,8 +6,14 @@
         <div class="description">DECENTRALIZED PLATFORMS AND SPACES</div>
       </div>
       <div class="display-images">
-        <div class="image-container"><img src="~assets/spacequest-thumb.png" alt="space quest thumb"></div>
-        <div class="image-container"><img src="~assets/liminalnetwork-thumb.png" alt="liminal network thumb"></div>
+        <nuxt-link class="image-container"  to="/space-quest" >
+          <!-- <img class="image-holder" src="~assets/spacequest-thumb-small.png" alt="space quest thumb"> -->
+          <img class="image-full" src="~assets/spacequest-thumb.png" alt="space quest thumb">
+        </nuxt-link>
+        <a class="image-container" href="https://liminal.network/">
+          <!-- <img class="image-holder" src="~assets/liminalnetwork-thumb-small.png" alt="liminal network thumb"> -->
+          <img class="image-full" src="~assets/liminalnetwork-thumb.png" alt="liminal network thumb">
+        </a>
       </div>
       <footer class="footer">
         cc Byzantine Inc. 2018
@@ -27,7 +33,7 @@
 }
 
 .content {
-  margin: 40px 0;
+  margin: 100px 0;
   flex: 1;
   text-align: center;
   display: flex;
@@ -52,6 +58,12 @@
 }
 .image-container {
   flex: 1;
+  position: relative;
+}
+.image-holder {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 .image-container img {
   width: 100%;
@@ -76,8 +88,6 @@
   .description {
     font-size: 1.2em;
   }
-}
-@media (max-width: 425px) {
   .display-images {
     flex-wrap: wrap;
   }
