@@ -28,6 +28,26 @@
           <p class="answer">The Byzantine Space Quest is the first of many quests in our multiverse that spans the digital and physical worlds. Your first quest? Collect and trade digital space - starting in outer space!</p>
           <p class="answer">For every tile purchased, you'll be contributing .02 ETH of the transfer price for connecting our world with <a href="#">mesh networks</a>, receive a physical tile in the form of an enamel pin, and see your tile across the digital and physical worlds in installations throughout <a href="#">Byzantine</a>'s space.</p>
         </section>
+        <section class="rewards">
+          <h4 class="section-subtitle">Quest Rewards</h4>
+          <div class="cards">
+            <div class="reward-card">
+              <div class="card-title">ERC721 Token</div>
+              <div class="card-img"><img src="~assets/pin-rocketship.png" alt="rocketship pin"></div>
+              <div class="card-text">See your unique ERC-721 token visualized on installations online and off</div>
+            </div>
+            <div class="reward-card">
+              <div class="card-title">Mesh Network Contribution</div>
+              <div class="card-img"><img src="~assets/pin-rocketship.png" alt="rocketship pin"></div>
+              <div class="card-text">Your purchase will help connect the world with a mesh network, helping to fight Net Neutrality</div>
+            </div>
+            <div class="reward-card">
+              <div class="card-title">Enamel Pin</div>
+              <div class="card-img"><img src="~assets/pin-rocketship.png" alt="rocketship pin"></div>
+              <div class="card-text">Show your support with a limited edition enamel pin</div>
+            </div>
+          </div>
+        </section>
       </div>
       <!-- 
 
