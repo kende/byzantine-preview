@@ -3,22 +3,24 @@
     <div class="container">
       <div class="parallax-stars">
         <!-- <div class="stars-group"> -->
-          <div id="layer1" class="layer"><img class="stars" src="~assets/bk-stars-1.png" alt=""></div>
-          <div id="layer2" class="layer"><img class="stars" src="~assets/bk-stars-2.png" alt=""></div>
+          <div id="layer1" class="layer"><img class="stars" src="~assets/bk-stars-1.png" alt="Star background"></div>
+          <div id="layer2" class="layer"><img class="stars" src="~assets/bk-stars-2.png" alt="Star background"></div>
         <!-- </div> -->
       </div>
       <div class="content">
         <nav class="navbar">
-          <div class="nav-item"><img class="logo" src="~assets/Byzantine-Logo-yellow.png" alt=""></div>
+          <div class="nav-item"><a href="#"><img class="logo" src="~assets/Byzantine-Logo-yellow.png" alt=""></a></div>
           <div class="item-group">
-            <div class="nav-item">START QUEST</div>
-            <div class="nav-item">GET SPACE</div>
+            <div class="nav-item"><a href="#">START QUEST</a></div>
+            <div class="nav-item"><a href="#">GET SPACE</a></div>
           </div>
         </nav> 
         <section class="banner">
-          <div class="headline">SPACE</div>
-          <div class="headline">QUEST</div>
-          <div class="description">COLLECT THE MULTIVERSE</div>
+          <div class="banner-container">
+            <div class="headline">SPACE</div>
+            <div class="headline">QUEST</div>
+            <div class="description">COLLECT THE MULTIVERSE</div>
+          </div>
         </section>
         <section class="explanation">
           <div><img src="" alt=""></div>
