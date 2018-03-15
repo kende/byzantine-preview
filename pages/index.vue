@@ -5,6 +5,10 @@
         <div class="logo-wrapper"><img class="logo" src="~assets/Byzantine-Logo.png" alt="Company logo"></div>
         <div class="description">DECENTRALIZED PLATFORMS AND SPACES</div>
       </div>
+      <div class="display-images">
+        <div class="image-container"><img src="~assets/spacequest-thumb.png" alt="space quest thumb"></div>
+        <div class="image-container"><img src="~assets/liminalnetwork-thumb.png" alt="liminal network thumb"></div>
+      </div>
       <footer class="footer">
         cc Byzantine Inc. 2018
       </footer>
@@ -23,6 +27,7 @@
 }
 
 .content {
+  margin: 40px 0;
   flex: 1;
   text-align: center;
   display: flex;
@@ -42,6 +47,18 @@
   letter-spacing: .2em;
 }
 
+.display-images {
+  display: flex;
+}
+.image-container {
+  flex: 1;
+}
+.image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .footer {
   flex: 0;
   text-align: center;
@@ -58,6 +75,15 @@
 @media (max-width: 668px) {
   .description {
     font-size: 1.2em;
+  }
+}
+@media (max-width: 425px) {
+  .display-images {
+    flex-wrap: wrap;
+  }
+  .image-container {
+    flex: none;
+    width: 100%;
   }
 }
 </style>
