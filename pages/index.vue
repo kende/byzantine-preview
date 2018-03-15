@@ -98,7 +98,6 @@
   object-fit: cover;
 }
 
-
 .content {
   position: absolute;
   top: 0;
@@ -130,10 +129,14 @@
 .item-group .nav-item:hover {
   text-decoration: underline;
 }
+.nav-item a {
+  background: rgba(30, 34, 107, .8);
+  border-radius: 2px;
+}
 
 .banner {
   position: relative;
-  height: 90vh;
+  height: 100vh;
   text-align: center;
   color: #fff;
 }
@@ -151,6 +154,8 @@
   text-transform: uppercase;
 }
 .description {
+  background: rgba(30, 34, 107, .8);
+  border-radius: 2px;
   font-family: "rational-light", sans-serif;
   font-size: 2.2em;
   color: #F4DF9D;
@@ -193,15 +198,17 @@
 }
 .cards {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-around;
   margin: auto;
   padding:  40px 0;
   max-width: 1000px;
 }
 .reward-card {
-  flex: 1;
+  flex: none;
+  margin: 20px 0;
   padding: 20px 40px;
-  max-width: 300px;
+  width: 300px;
   background: #1E226B;
   border: 3px solid #F4DF9D;
   border-radius: 8px;
@@ -290,5 +297,45 @@
 }
 .footer-item a:hover {
   text-decoration: underline;
+}
+
+@media (max-width: 960px) {
+  .cards {
+    max-width: 680px;
+  }
+}
+@media (max-width: 649px) {
+  .cards {
+    max-width: 300px;
+  }
+  .banner-container {
+    width: 100%;
+  }
+  .headline {
+    font-size: 16vw;
+  }
+  .description {
+    font-size: 6vw;
+  }
+}
+@media (max-width: 424px) {
+  .navbar {
+    padding: 0 8px;
+    height: 50px;
+    line-height: 50px;
+  }
+  .logo {
+    flex: 1;
+    margin: 10px 0;
+    height: 40px;
+  }
+  .item-group {
+    flex: none;
+  }
+  .item-group .nav-item {
+    margin: 10px 0 0 10px;
+    height: 60px;
+    font-size: .8em;
+  }
 }
 </style>
