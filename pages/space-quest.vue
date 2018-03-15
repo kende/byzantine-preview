@@ -217,7 +217,7 @@
   font-size: 1.6em;
   color: #F4DF9D;
   letter-spacing: 2px;
-  min-height: 48px;
+  min-height: 56px;
 }
 .card-img {
   margin: 6px 0 20px;
