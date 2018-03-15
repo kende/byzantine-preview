@@ -9,8 +9,8 @@
         <nav class="navbar">
           <div class="nav-item"><a href="http://byzantine.network/"><img class="logo" src="~assets/Byzantine-logo-yellow.png" alt=""></a></div>
           <div class="item-group">
-            <div class="nav-item"><a href="#">START QUEST</a></div>
-            <div class="nav-item"><a href="#">GET SPACE</a></div>
+            <!-- <div class="nav-item"><a href="#">START QUEST</a></div> -->
+            <!-- <div class="nav-item"><a href="#">GET SPACE</a></div> -->
           </div>
         </nav> 
         <section class="banner">
