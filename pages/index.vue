@@ -56,6 +56,10 @@
           <div class="purchase-text"><small class="purchase-small">Limited 10K Token release</small></div>
           <div class="purchase-btn"><button class="buy-btn">Buy Now</button></div>
         </section>
+        <footer class="footer">
+          <div class='footer-item'><a href='http://byzantine.network/' target='_blank'>a byzantine thing</a> 🦄</div>
+          <div class='footer-item'><a href='https://app.termly.io/document/privacy-policy-for-website/c596a054-bb10-4bc0-b04d-d582f48ee43e' target='_blank'>privacy policy</a> &amp; <a href='https://app.termly.io/document/terms-of-use-for-website/afc96613-61ec-4c6d-89fa-c6720e93ffa1' target='_blank'>terms</a></div>
+        </footer>
       </div>
       <!-- 
 
