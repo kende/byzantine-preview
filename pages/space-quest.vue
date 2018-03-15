@@ -49,7 +49,7 @@
         <section class="purchase">
           <h5 class="section-title">Space is limited.</h5>
           <h5 class="section-title">Discover yours now.</h5>
-          <div class="purchase-text">0.215 ETH</div>
+          <div class="purchase-text">Coming March 22, 2018</div>
           <div class="purchase-text purchase-pink">Space Quest Badge</div>
           <div class="purchase-text"><small class="purchase-small">Limited 10K Token release</small></div>
           <div class="purchase-btn"><button class="buy-btn">Buy Now</button></div>
