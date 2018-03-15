@@ -52,18 +52,82 @@
           <div class="purchase-text">Coming March 22, 2018</div>
           <div class="purchase-text purchase-pink">Space Quest Badge</div>
           <div class="purchase-text"><small class="purchase-small">Limited 10K Token release</small></div>
-          <div class="purchase-btn"><button class="buy-btn">Buy Now</button></div>
+          <div class="subscription-form">
+            <div class="subscription-group">
+              <input type="email" placeholder="email..." @keypress='emailChange' v-model='email' required>
+              <button @click='submit'>Subscribe</button>
+            </div>
+            <div class="error-msg">{{errorMsg}}</div>
+          </div>
         </section>
         <footer class="footer">
           <div class="footer-item"><a href="http://byzantine.network/">a byzantine thing</a> 🦄</div>
           <div class="footer-item"><a href="https://app.termly.io/document/privacy-policy-for-website/c596a054-bb10-4bc0-b04d-d582f48ee43e" target="_blank">privacy policy</a> &amp; <a href="https://app.termly.io/document/terms-of-use-for-website/afc96613-61ec-4c6d-89fa-c6720e93ffa1" target="_blank">terms</a></div>
         </footer>
       </div>
+    </div>        
+    <div class='success-popup'>
+      <div class='popup-body'>
+        <div class='popup-title'>You've successfully subscribed!</div>
+        <div class='popup-text'>Keep an eye out for the upcoming token release ✨</div>
+        <button class='close-btn' @click='closePopup'>OK</button>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios'
+
+export default {
+  data() {
+    return {
+      email: '',
+      errorMsg: '',
+    }
+  },
+  methods: {
+    closePopup () {
+      const el = document.querySelector('.success-popup')
+      el.className = 'success-popup'
+    },
+    emailChange () {
+      this.errorMsg = !this.validEmail(this.email) ? 'Valid email required.' : ''
+    },
+    validEmail:function(email) {
+      const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      return re.test(email)
+    },
+    addEmailToSubscriptionList () {
+      const el = document.querySelector('.success-popup')
+      console.log(this.email)
+      axios({
+        url: "https://api.node.nyc/api/email-subscrption/space-quest",
+        // url: "http://localhost:9090/api/email-subscrption/space-quest",
+        method: 'post',
+        data: {
+          "email": this.email
+        }
+      })
+      .then(function(response) {
+        if (response) {
+          console.log(response)
+          el.className += ' active'
+        }
+      })
+      .then(function(error) {
+        if (error) console.log(error)
+      })
+    },
+    submit () {
+      if (this.validEmail(this.email)) {
+        this.addEmailToSubscriptionList()
+      } else {
+        console.log('Valid email required.')
+      }
+    }
+  }
+}
 </script>
 
 <style scoped>
@@ -296,6 +360,96 @@
 }
 .footer-item a:hover {
   text-decoration: underline;
+}
+
+.subscription-form {
+  margin: 40px auto;
+  height: 40px;
+  max-width: 500px;
+  font-family: 'Roboto Mono', monospace;
+}
+.subscription-group {
+  display: flex;
+  justify-content: space-between;
+  height: 100%;
+}
+.subscription-form input {
+  flex: 1;
+  padding: 0 14px;
+  background: rgba(255, 255, 255, .4);
+  height: 100%;
+  border: 1px solid #ccc;
+  border-right: none;
+}
+.subscription-form button {
+  flex: 0;
+  padding: 13px 20px;
+  height: 100%;
+  background: #f86bcf;
+  border: none;
+  font-family: "arame-regular", sans-serif;
+  font-size: .9em;
+  text-decoration: none;
+  color: #fff;
+  letter-spacing: 2px;
+  cursor: pointer;
+}
+.subscription-form button:hover {
+  background: #ffa8e5;
+}
+.error-msg {
+  margin-top: 4px;
+  font-size: 12px;
+  text-align: left;
+  color: #D52427;
+}
+.success-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, .8);
+  display: none;
+}
+.success-popup.active {
+  display: block;
+}
+.popup-body {
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  padding: 40px 24px;
+  width: 90%;
+  max-width: 500px;
+  background: #fff;
+  text-align: center;
+  transform: translate(-50%, -50%);
+  font-family: 'Roboto Mono', monospace;
+  color: #212121;
+}
+.popup-title {
+  font-family: "arame-regular", sans-serif;
+  font-size: 30px;
+  letter-spacing: 4px;
+}
+.popup-text {
+  margin: 30px auto;
+  max-width: 400px;
+}
+.close-btn {
+  padding: 13px 30px;
+  height: 40px;
+  min-width: 120px;
+  background: #f86bcf;
+  border: none;
+  font-size: .9em;
+  text-decoration: none;
+  border-radius: 2px;
+  font-family: "arame-regular", sans-serif;
+  color: #fff;
+  letter-spacing: 4px;
+  outline: none;
 }
 
 @media (max-width: 960px) {
