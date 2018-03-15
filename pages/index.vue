@@ -86,10 +86,10 @@
   height: 100vh;
 }
 #layer1 {
-  transform: translateZ(-.5px) scale(1.28);
+  transform: translateZ(-.25px) scale(1.14);
 }
 #layer2 {
-  transform: translateZ(-.25px) scale(1.14);
+  transform: translateZ(-.5px) scale(1.28);
 }
 
 .stars {
@@ -136,7 +136,7 @@
 
 .banner {
   position: relative;
-  height: 100vh;
+  height: 90vh;
   text-align: center;
   color: #fff;
 }
@@ -154,7 +154,6 @@
   text-transform: uppercase;
 }
 .description {
-  background: rgba(30, 34, 107, .8);
   border-radius: 2px;
   font-family: "rational-light", sans-serif;
   font-size: 2.2em;
@@ -336,6 +335,9 @@
     margin: 10px 0 0 10px;
     height: 60px;
     font-size: .8em;
+  }
+  .banner {
+    height: calc(100vh - 49px);
   }
 }
 </style>
