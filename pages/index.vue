@@ -6,13 +6,13 @@
         <div class="description">DECENTRALIZED PLATFORMS AND SPACES</div>
       </div>
       <div class="display-images">
-        <nuxt-link class="image-container"  to="/space-quest" >
-          <!-- <img class="image-holder" src="~assets/spacequest-thumb-small.png" alt="space quest thumb"> -->
-          <img class="image-full" src="~assets/spacequest-thumb.png" alt="space quest thumb">
+        <nuxt-link class="image-container"  to="/space-quest">
+          <img class="image-full" src="~assets/spacequest-thumb.png" alt="space quest thumb" @load='lazyLoad'>
+          <img class="image-holder" src="~assets/spacequest-thumb-small.png" alt="space quest thumb">
         </nuxt-link>
         <a class="image-container" href="https://liminal.network/">
-          <!-- <img class="image-holder" src="~assets/liminalnetwork-thumb-small.png" alt="liminal network thumb"> -->
-          <img class="image-full" src="~assets/liminalnetwork-thumb.png" alt="liminal network thumb">
+          <img class="image-full" src="~assets/liminalnetwork-thumb.png" alt="liminal network thumb" @load='lazyLoad'>
+          <img class="image-holder" src="~assets/liminalnetwork-thumb-small.png" alt="liminal network thumb">
         </a>
       </div>
       <footer class="footer">
@@ -23,6 +23,13 @@
 </template>
 
 <script>
+export default {
+  methods: {
+    lazyLoad (e) {
+      e.target.nextSibling.remove()
+    }
+  }
+}
 </script>
 
 <style scoped>
@@ -64,6 +71,7 @@
   position: absolute;
   top: 0;
   left: 0;
+  filter: blur(1px);
 }
 .image-container img {
   width: 100%;
