@@ -24,7 +24,7 @@
           <div class="star-icon"><img src="~assets/large-star.png" alt="star" height="40" width="40"></div>
           <h4 class="section-subtitle">What is this?</h4>
           <p class="answer">The Byzantine Space Quest is the first of many quests in our multiverse that spans the digital and physical worlds. Your first quest? Collect and trade digital space - starting in outer space!</p>
-          <p class="answer">For every tile purchased, you'll be contributing .02 ETH of the transfer price for connecting our world with <a href="https://nycmesh.net/faq/" target="_blank">mesh networks</a>, receive a physical tile in the form of an enamel pin, and see your tile across the digital and physical worlds in installations throughout <a href="https://byzantine.network/">Byzantine</a>'s space.</p>
+          <p class="answer">For every tile purchased, you'll be contributing .02 ETH of the resale price for connecting our world with <a href="https://nycmesh.net/faq/" target="_blank">mesh networks</a>, receive a physical tile in the form of an enamel pin, and see your tile projected across the digital and physical worlds in light installations throughout <a href="https://liminal.network/" target="_blank">Liminal</a> spaces and beyond.</p>
         </section>
         <section class="rewards">
           <h4 class="section-subtitle">Quest Rewards</h4>
@@ -37,7 +37,7 @@
             <div class="reward-card">
               <div class="card-title">Mesh Network Contribution</div>
               <div class="card-img"><img src="~assets/meshnetwork-icon.png" alt="mesh network icon"></div>
-              <div class="card-text">Your purchase will help connect the world with a mesh network, helping to fight Net Neutrality</div>
+              <div class="card-text">Your purchase will help connect the world with mesh networks, helping to fight for Net Neutrality</div>
             </div>
             <div class="reward-card">
               <div class="card-title">Enamel Pin</div>
@@ -49,7 +49,7 @@
         <section class="purchase">
           <h5 class="section-title">Space is limited.</h5>
           <h5 class="section-title">Discover yours now.</h5>
-          <div class="purchase-text">Coming March 19, 2018</div>
+          <div class="purchase-text">Launching March 19, 2018</div>
           <div class="purchase-text purchase-pink">Space Quest Badge</div>
           <div class="purchase-text"><small class="purchase-small">Limited 10K Token release</small></div>
           <div class="subscription-form">

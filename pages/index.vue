@@ -6,7 +6,7 @@
         <div class="description">DECENTRALIZED PLATFORMS AND SPACES</div>
       </div>
       <div class="display-images">
-        <nuxt-link class="image-container"  to="/space-quest">
+        <nuxt-link class="image-container"  to="/spacequest">
           <img class="image-full" src="~assets/spacequest-thumb.png" alt="space quest thumb" @load='lazyLoad'>
           <img class="image-holder" src="~assets/spacequest-thumb-small.png" alt="space quest thumb">
         </nuxt-link>
