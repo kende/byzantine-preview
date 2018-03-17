@@ -10,14 +10,14 @@
 <style scoped>
 .footer {
   display: flex;
-  padding:  24px 0;
+  padding:  16px 0;
   background: #fafafa;
   text-align: right;
   flex-flow: wrap;
   justify-content: flex-end;
 }
 .footer-item {
-  margin: 10px 24px;
+  margin: 8px 24px;
   font-size: .8em;
   font-family: rational-light, sans-serif;
   text-align: center;
