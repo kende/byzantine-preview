@@ -6,13 +6,7 @@
         <div id="layer2" class="layer"><img class="stars" src="~assets/bk-stars-2.png" alt="Star background"></div>
       </div>
       <div class="content">
-        <nav class="navbar">
-          <div class="nav-item"><a href="http://byzantine.network/"><img class="logo" src="~assets/Byzantine-logo-yellow.png" alt=""></a></div>
-          <div class="item-group">
-            <!-- <div class="nav-item"><a href="#">START QUEST</a></div> -->
-            <!-- <div class="nav-item"><a href="#">GET SPACE</a></div> -->
-          </div>
-        </nav> 
+        <Navbar />
         <section class="banner">
           <div class="banner-container">
             <div class="headline">SPACE</div>
@@ -60,10 +54,7 @@
             <div class="error-msg">{{errorMsg}}</div>
           </div>
         </section>
-        <footer class="footer">
-          <div class="footer-item"><a href="http://byzantine.network/">a byzantine thing</a> 🦄</div>
-          <div class="footer-item"><a href="https://app.termly.io/document/privacy-policy-for-website/c596a054-bb10-4bc0-b04d-d582f48ee43e" target="_blank">privacy policy</a> &amp; <a href="https://app.termly.io/document/terms-of-use-for-website/afc96613-61ec-4c6d-89fa-c6720e93ffa1" target="_blank">terms</a></div>
-        </footer>
+        <Footer />
       </div>
     </div>        
     <div class='success-popup'>
@@ -78,8 +69,14 @@
 
 <script>
 import axios from 'axios'
+import Navbar from '~/components/Navbar.vue'
+import Footer from '~/components/Footer.vue'
 
 export default {
+  components: {
+    Navbar,
+    Footer
+  },
   data() {
     return {
       email: '',
@@ -166,36 +163,6 @@ export default {
   position: absolute;
   top: 0;
   width: 100%;
-}
-
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  top: 0;
-  padding:  0 24px;
-  height: 10vh;
-  line-height: 10vh;
-}
-.navbar a {
-  color: #e0e0e0;
-  text-decoration: none;
-}
-.logo {
-  margin: 2vh 0;
-  height: 6vh;
-}
-.item-group {
-  display: flex;
-}
-.item-group .nav-item {
-  margin-left: 20px;
-}
-.item-group .nav-item:hover {
-  text-decoration: underline;
-}
-.nav-item a {
-  background: rgba(30, 34, 107, .8);
-  border-radius: 2px;
 }
 
 .banner {
@@ -339,29 +306,6 @@ export default {
   transform: translateY(2px);
 }
 
-.footer {
-  display: flex;
-  padding:  24px 0;
-  background: #fafafa;
-  text-align: right;
-  flex-flow: wrap;
-  justify-content: flex-end;
-}
-.footer-item {
-  margin: 10px 24px;
-  font-size: .8em;
-  font-family: rational-light, sans-serif;
-  text-align: center;
-}
-.footer-item a {
-  text-decoration: none;
-  color: #424242;
-  word-spacing: 0px;
-}
-.footer-item a:hover {
-  text-decoration: underline;
-}
-
 .subscription-form {
   margin: 40px auto;
   height: 40px;
@@ -472,24 +416,6 @@ export default {
   }
 }
 @media (max-width: 424px) {
-  .navbar {
-    padding: 0 8px;
-    height: 50px;
-    line-height: 50px;
-  }
-  .logo {
-    flex: 1;
-    margin: 10px 0;
-    height: 40px;
-  }
-  .item-group {
-    flex: none;
-  }
-  .item-group .nav-item {
-    margin: 10px 0 0 10px;
-    height: 60px;
-    font-size: .8em;
-  }
   .banner {
     height: calc(100vh - 49px);
   }
