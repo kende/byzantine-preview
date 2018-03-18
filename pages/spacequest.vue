@@ -43,7 +43,7 @@
         <section class="purchase">
           <h5 class="section-title">Space is limited.</h5>
           <h5 class="section-title">Discover yours now.</h5>
-          <div class="purchase-text">Launching March 21, 2018</div>
+          <!-- <div class="purchase-text">Launching March 21, 2018</div> -->
           <div class="purchase-text purchase-pink">Space Quest Badge</div>
           <div class="purchase-text"><small class="purchase-small">Limited 10K Token release</small></div>
           <div class="subscription-form">

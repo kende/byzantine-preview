@@ -33,9 +33,9 @@
             <div class="detail-icon"><img src="~assets/person-icon.png" alt="person icon"></div>
             <p class="detail-text">Share with your friends to complete the quest!</p>
             <div class="social-media">
-              <div class="social-icon"><img src="~assets/facebook-icon.png" alt=""></div>
-              <div class="social-icon"><img src="~assets/facebook-icon.png" alt=""></div>
-              <div class="social-icon"><img src="~assets/facebook-icon.png" alt=""></div>
+              <div class="social-icon"><!-- <img src="~assets/facebook-icon.png" alt=""> --></div>
+              <div class="social-icon"><!-- <img src="~assets/facebook-icon.png" alt=""> --></div>
+              <div class="social-icon"><!-- <img src="~assets/facebook-icon.png" alt=""> --></div>
             </div>
           </div>
         </div>
@@ -187,6 +187,7 @@ export default {
   margin: 5px;
   height: 30px;
   width: 30px;
+  background: #e0e0e0;
 }
 .social-icon img {
   height: 100%;

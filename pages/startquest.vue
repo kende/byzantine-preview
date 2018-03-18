@@ -14,7 +14,7 @@
         <div class="purchase">
           <h5 class="section-title">Space is limited.</h5>
           <h5 class="section-title">Discover yours now.</h5>
-          <div class="purchase-text">Launching March 21, 2018</div>
+          <!-- <div class="purchase-text">Launching March 21, 2018</div> -->
           <div class="purchase-text purchase-pink">Space Quest Badge</div>
           <div class="purchase-text"><small class="purchase-small">Limited 10K Token release</small></div>
           <div class="purchase-btn"><button>Buy</button></div>
@@ -113,6 +113,7 @@ export default {
   border: none;
   font-family: "arame-regular", sans-serif;
   font-size: 1.2em;
+  line-height: 50px;
   color: #fff;
   letter-spacing: 2px;
   cursor: pointer;
