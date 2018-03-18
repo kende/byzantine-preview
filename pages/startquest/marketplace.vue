@@ -37,4 +37,9 @@
   border-bottom: 1px solid #1E226B;
   line-height: 1.4em;
 }
+@media (max-width: 767px) {
+  .answer {
+    margin: 30px auto;
+  }
+}
 </style>

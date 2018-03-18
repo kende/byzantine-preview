@@ -59,7 +59,7 @@ export default {
   flex: 1 1;
   display: flex;
   margin: 0 auto;
-  padding:  60px 0;
+  padding:  60px 24px;
   width: 100%;
   max-width: 1000px;
 }
@@ -120,5 +120,25 @@ export default {
 
 .footer {
   flex: 0 0;
+}
+
+@media (max-width: 767px) {
+  .content-wrapper {
+    padding:  20px 24px;
+    display: flex;
+    flex-wrap: wrap;
+    text-align: center;
+  }
+  .side-nav {
+    margin-bottom: 50px;
+    flex: none;
+    width: 100%;
+
+  }
+  .content {
+    margin: 0;
+    flex: none;
+    width: 100%;
+  }
 }
 </style>

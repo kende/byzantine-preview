@@ -57,4 +57,13 @@ export default {
 .side-nav-item.active a {
   color: #f86bcf;
 }
+
+@media (max-width: 767px) {
+  .side-nav-item {
+    margin: 10px;
+  }
+  .answer {
+    margin: 30px auto;
+  }
+}
 </style>
