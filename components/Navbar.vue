@@ -2,9 +2,9 @@
   <nav class="navbar">
     <div class="nav-item"><a href="http://byzantine.network/"><img class="logo" src="../assets/Byzantine-logo-yellow.png" alt="Byzantine logo"></a></div>
     <div class="item-group">
-      <div class="nav-item" v-if="currPage && !currPage.includes('spacequest')"><nuxt-link to="/spacequest">HOME</nuxt-link></div>
-      <div class="nav-item" v-if="currPage && !currPage.includes('startquest')"><nuxt-link to="/startquest">START QUEST</nuxt-link></div>
-      <div class="nav-item" v-if="currPage && !currPage.includes('getspace')"><nuxt-link to="/getspace">GET SPACE</nuxt-link></div>
+      <!-- <div class="nav-item" v-if="currPage && !currPage.includes('spacequest')"><nuxt-link to="/spacequest">HOME</nuxt-link></div> -->
+      <!-- <div class="nav-item" v-if="currPage && !currPage.includes('startquest')"><nuxt-link to="/startquest">START QUEST</nuxt-link></div> -->
+      <!-- <div class="nav-item" v-if="currPage && !currPage.includes('getspace')"><nuxt-link to="/getspace">GET SPACE</nuxt-link></div> -->
     </div>
   </nav>
 </template>
