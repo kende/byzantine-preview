@@ -1,8 +1,7 @@
 <template>
   <div class="text">
-    <h4 class="section-subtitle">What is FAQ?</h4>
-    <p class="answer">The Byzantine Space Quest is the first of many quests in our multiverse that spans the digital and physical worlds. Your first quest? Collect and trade digital space - starting in outer space!</p>
-    <p class="answer">For every tile purchased, you'll be contributing .02 ETH of the resale price for connecting our world with <a href="https://nycmesh.net/faq/" target="_blank">mesh networks</a>, receive a physical tile in the form of an enamel pin, and see your tile projected across the digital and physical worlds in light installations throughout <a href="https://liminal.network/" target="_blank">Liminal</a> spaces and beyond.</p>
+    <h4 class="section-subtitle">FAQ</h4>
+    <p class="answer">Coming Soon...</p>
   </div>
 </template>
 

@@ -6,20 +6,20 @@
     <li class="side-nav-item" v-bind:class="{ active: currPage === 'startquest-getstarted' }">
       <nuxt-link to='/startquest/getstarted'>Get Started</nuxt-link>
     </li>
-    <li class="side-nav-item" v-bind:class="{ active: currPage === 'startquest-collect' }">
-      <nuxt-link to='/startquest/collect'>Collect</nuxt-link>
-    </li>
     <li class="side-nav-item" v-bind:class="{ active: currPage === 'startquest-marketplace' }">
-      <nuxt-link to='/startquest/marketplace'>MarketPlace</nuxt-link>
+      <nuxt-link to='/startquest/marketplace'>The Details</nuxt-link>
     </li>
-    <li class="side-nav-item" v-bind:class="{ active: currPage === 'startquest-FAQ' }">
+    <li class="side-nav-item" v-bind:class="{ active: currPage === 'startquest-collect' }">
+      <nuxt-link to='/startquest/collect'>What's Next?</nuxt-link>
+    </li>
+    <!-- <li class="side-nav-item" v-bind:class="{ active: currPage === 'startquest-FAQ' }">
       <nuxt-link to='/startquest/FAQ'>FAQ</nuxt-link>
-    </li>
+    </li> -->
   </ul>
 </template>
 
 <script>
-export default { 
+export default {
   data () {
     return {
       currPage: null

@@ -128,13 +128,16 @@ export default {
     padding:  20px 24px;
     display: flex;
     flex-wrap: wrap;
-    text-align: center;
+    text-align: left;
   }
   .side-nav {
     margin-bottom: 50px;
     flex: none;
     width: 100%;
-
+    text-align: left;
+  }
+  .side-navbar{
+    padding-left: 0;
   }
   .content {
     margin: 0;

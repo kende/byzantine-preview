@@ -1,8 +1,9 @@
 <template>
   <div class="text">
-    <h4 class="section-subtitle">What is this?</h4>
-    <p class="answer">The Byzantine Space Quest is the first of many quests in our multiverse that spans the digital and physical worlds. Your first quest? Collect and trade digital space - starting in outer space!</p>
-    <p class="answer">For every tile purchased, you'll be contributing .02 ETH of the resale price for connecting our world with <a href="https://nycmesh.net/faq/" target="_blank">mesh networks</a>, receive a physical tile in the form of an enamel pin, and see your tile projected across the digital and physical worlds in light installations throughout <a href="https://liminal.network/" target="_blank">Liminal</a> spaces and beyond.</p>
+    <h4 class="section-subtitle">The Quest</h4>
+    <p class="answer">Byzantine’s Space Quest is a collectible art project that will fund real infrastructure that our community and the surrounding communities need – mainly access to space and internet. We’re on a mission to decentralize everything through community spaces and mesh networking.</p>
+    <p class="answer">Our method? A large decentralized piece of art made of tiles. To reveal your tiles, all the tokens must be purchased. Only then will the tiles flip to reveal the entire piece.</p>
+    <p class="answer">This is just our first mission. Are you in?</p>
   </div>
 </template>
 

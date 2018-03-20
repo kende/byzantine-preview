@@ -1,8 +1,8 @@
 <template>
   <div class="text">
-    <h4 class="section-subtitle">What is macketplace?</h4>
-    <p class="answer">The Byzantine Space Quest is the first of many quests in our multiverse that spans the digital and physical worlds. Your first quest? Collect and trade digital space - starting in outer space!</p>
-    <p class="answer">For every tile purchased, you'll be contributing .02 ETH of the resale price for connecting our world with <a href="https://nycmesh.net/faq/" target="_blank">mesh networks</a>, receive a physical tile in the form of an enamel pin, and see your tile projected across the digital and physical worlds in light installations throughout <a href="https://liminal.network/" target="_blank">Liminal</a> spaces and beyond.</p>
+    <h4 class="section-subtitle">The Details</h4>
+    <p class="answer">Each tile is tied to a unique ERC-721 token, a crypto asset. Individually, a tile has its own art, but when put together, they collectively create a larger piece. There will be a total of 10,000 tiles created, and the tiles will only be revealed once all of them have been sold. </p>
+    <p class="answer">The first tiles will start off lower in price and  increase as more are purchased. For each tile purchased, .02 ETH will be used to build a mesh network infrastructure – fighting for Net Neutrality, starting in the neighborhood of Bushwick in Brooklyn.</p>
   </div>
 </template>
 
