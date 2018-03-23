@@ -1,7 +1,7 @@
 <template>
   <div class="text">
     <h4 class="section-subtitle">What's Next?</h4>
-    <p class="answer">Once all the tiles are flipped, they will be displayed as digital and physical light installations in our spaces, purchasers will get a redeemable code for a physical enamel pin to show your support, and the marketplace will open for resale of the tokens.</p>
+    <p class="answer">Once all the tiles are flipped, the entire multiverse art piece will be displayed as digital and physical light installations in our spaces all around the world, purchasers will get a redeemable code for a physical enamel pin to show their support, and the marketplace will open for resale of the tokens!</p>
   </div>
 </template>
 
