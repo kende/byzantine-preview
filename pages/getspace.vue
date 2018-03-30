@@ -9,15 +9,31 @@
           <img src="~assets/erc721-icon-blue.png" alt="ERC721 Token icon">
         </div>
         <div class="info">
-          <div class="tiles-left">100, 000 tiles left</div>
+          <div class="tiles-left">10, 000 tiles left</div>
           <div class="last-price">LAST TILE PRICE: Origin</div>
           <div class="current-price">CURRENT PRICE: <span>.0215 ETH</span></div>
-          <div class="button-group">
-            <button class="buy1">BUY 1</button>
-            <button class="buy3">BUY 3</button>
+          <div class="not-install" v-if="isInstalled === false">MetaMask is not installed.</div>
+          <div class="not-login" v-else-if="isLogIn === false">MetaMask is not login.</div>
+          <div class="not-mainnet" v-else-if="isMainnet === false">Your are not on the Main Ethereum Network.</div>
+          <div class="button-group" v-else-if="isInstalled && isLogIn && isMainnet">
+            <button class="buy1" @click="buyTile">BUY 1</button>
+            <button class="buy3" @click="bulkBuyTile">BUY 3</button>
           </div>
         </div>
       </div>
+
+      <!-- example1 -->
+      <!-- <div class="container">
+        <h1>Coursetro Instructor</h1>
+        <h2 id="instructor"></h2>
+        <label for="name" class="col-lg-2 control-label">Instructor Name</label>
+        <input id="name" type="text">
+        <label for="name" class="col-lg-2 control-label">Instructor Age</label>
+        <input id="age" type="text">
+        <button id="button" @click="tempUpdate">Update Instructor</button>
+      </div> -->
+
+
       <div class="detail">
         <div class="detail-title">DETAILS</div>
         <div class="detail-items">
@@ -48,16 +64,162 @@
 <script>
 import Navbar from '~/components/Navbar.vue'
 import Footer from '~/components/Footer.vue'
+import Web3 from 'web3'
 
 export default {
   components: {
     Navbar,
     Footer
+  },
+  data () {
+    return {
+      isInstalled: undefined,
+      isLogIn: undefined,
+      isPurchaseBtn: undefined,
+      isMainnet: undefined,
+      account: null,
+    }
+  },
+  methods: {
+    init () {
+      const vm = this
+      if (typeof web3 !== 'undefined') {
+        vm.web3 = new Web3(web3.currentProvider)
+        vm.isInstalled = true
+        vm.checkStatus()
+      } else {
+        // vm.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"))
+        vm.isInstalled = false
+      }
+
+      vm.accountInterval = setInterval(function() {
+        if (vm.web3.eth.accounts[0] !== vm.account) {
+          vm.account = vm.web3.eth.accounts[0]
+          vm.checkStatus()
+        }
+      }, 1000);
+    },
+    checkStatus () {
+      const vm = this
+
+      console.log(vm.web3.eth.accounts)
+
+      vm.web3.eth.getAccounts((err, acc) => {
+        if (err != null) {
+          console.error("An error occurred: " + err)
+        } else if (acc.length == 0) {
+          vm.isLogIn = false
+        } else {
+          vm.isLogIn = true
+          vm.account = acc[0]
+        }
+      })
+
+      vm.web3.version.getNetwork((err, netId) => {
+        switch (netId) {
+          case "1":
+            vm.isMainnet = true
+            break
+          default:
+            vm.isMainnet = false
+        }
+      })
+    },
+    buyTile () {
+      alert('Buy 1 tile')
+    },
+    bulkBuyTile () {
+      alert('Buy 5 tile')
+    },
+    tempUpdate () {
+      // example1
+      console.log(document.querySelector("#name").value)
+      console.log(document.querySelector("#age").value)
+      this.Coursetro.setInstructor(document.querySelector("#name").value, document.querySelector("#age").value)
+    },
+    example1 () {
+      // https://coursetro.com/posts/code/99/Interacting-with-a-Smart-Contract-through-Web3.js-(Tutorial)
+      if (typeof web3 !== 'undefined') {
+        vm.web3 = new Web3(web3.currentProvider);
+      } else {
+        // set the provider you want from Web3.providers
+        vm.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"))
+        console.log('please install MetaMask')
+      }
+      vm.web3.eth.defaultAccount = vm.web3.eth.accounts[0]
+
+      const CoursetroContract = vm.web3.eth.contract([{"constant": false, "inputs": [{"name": "_fName", "type": "string"}, {"name": "_age", "type": "uint256"} ], "name": "setInstructor", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function"},{"constant": true, "inputs": [], "name": "getInstructor", "outputs": [{"name": "", "type": "string"}, {"name": "", "type": "uint256"} ], "payable": false, "stateMutability": "view", "type": "function"}])
+
+      vm.Coursetro = CoursetroContract.at('0xfd5e120f67de6a0e465ec9f6a5e61b56fe084977')
+      console.log(vm.Coursetro)
+
+      vm.Coursetro.getInstructor(function(error, result){
+        if(!error)
+          {
+            document.querySelector("#instructor").innerHTML = result[0]+' ('+result[1]+' years old)'
+            console.log(result)
+          }
+        else
+          console.error(error)
+      })
+    }
+  },
+  mounted () {
+    this.init()
+
+    // const vm = this
+    // if (typeof web3 !== 'undefined') {
+    //   vm.isInstalled = true
+    //   vm.metamaskInit()
+    // } else {
+    //   // set the provider you want from Web3.providers
+    //   // vm.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"))
+    //   vm.isInstalled = false
+    // }
+
+
+
+    // console.log(vm.web3)
+
+    // vm.web3.eth.defaultAccount = vm.web3.eth.accounts[0]
+
   }
 }
 </script>
 
 <style scoped>
+{/*
+body {
+    background-color:#F0F0F0;
+    padding: 2em;
+    font-family: 'Raleway','Source Sans Pro', 'Arial';
+}
+.container {
+    width: 50%;
+    margin: 0 auto;
+}
+label {
+    display:block;
+    margin-bottom:10px;
+}
+input {
+    padding:10px;
+    width: 50%;
+    margin-bottom: 1em;
+}
+button {
+    margin: 2em 0;
+    padding: 1em 4em;
+    display:block;
+}
+
+#instructor {
+    padding:1em;
+    background-color:#fff;
+    margin: 1em 0;
+}
+*/}
+
 .get-space {
   display: flex;
   flex-direction: column;
