@@ -9,9 +9,9 @@
           <img src="~assets/erc721-icon-blue.png" alt="ERC721 Token icon">
         </div>
         <div class="info">
-          <div class="tiles-left">10, 000 tiles left</div>
-          <div class="last-price">LAST TILE PRICE: Origin</div>
-          <div class="current-price">CURRENT PRICE: <span>.0215 ETH</span></div>
+          <div class="tiles-left">{{ tileLeft.toLocaleString() }} tiles left</div>
+          <div class="last-price">LAST TILE PRICE: {{ lastPrice }} ETH</div>
+          <div class="current-price">CURRENT PRICE: <span>{{ currentPrice }} ETH</span></div>
           <div class="not-install" v-if="isInstalled === false">MetaMask is not installed.</div>
           <div class="not-login" v-else-if="isLogIn === false">MetaMask is not login.</div>
           <div class="not-mainnet" v-else-if="isMainnet === false">Your are not on the Main Ethereum Network.</div>
@@ -62,6 +62,7 @@
 </template>
 
 <script>
+import abi from '~/static/ABI/ByzantineABI.json'
 import Navbar from '~/components/Navbar.vue'
 import Footer from '~/components/Footer.vue'
 import Web3 from 'web3'
@@ -78,6 +79,9 @@ export default {
       isPurchaseBtn: undefined,
       isMainnet: undefined,
       account: null,
+      currentPrice: '.00000',
+      lastPrice: '.00000',
+      tileLeft: 10000
     }
   },
   methods: {
@@ -97,7 +101,26 @@ export default {
           vm.account = vm.web3.eth.accounts[0]
           vm.checkStatus()
         }
-      }, 1000);
+      }, 1000)
+
+      vm.CoursetroContract = vm.web3.eth.contract(abi)
+      vm.Contract = vm.CoursetroContract.at('0x2111a1a8aad809b29aa38199d5b81bd6d0604897')
+
+      vm.Contract.tilePrice(function(error, result){
+        if(!error) {
+          console.log(vm.web3.fromWei(result.toNumber(), "ether" ))
+          vm.currentPrice = vm.web3.fromWei(result.toNumber(), "ether").replace('0.', '.')
+        } else {
+          console.error(error)
+        }
+      })
+
+      vm.Contract.totalSupply(function(error, result){
+        if(!error)
+          console.log(result.toNumber())
+        else
+          console.error(error)
+      })
     },
     checkStatus () {
       const vm = this
@@ -256,7 +279,7 @@ button {
 }
 .info {
   flex: 3;
-  margin-left: 40px;
+  margin-left: 60px;
 }
 .tiles-left {
   margin-top: 100px;
