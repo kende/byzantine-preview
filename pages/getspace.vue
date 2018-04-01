@@ -1,5 +1,5 @@
 <template>
-  <div class="get-space">
+  <div class="get-space" v-if="true" ><!-- v-if="isInstalled && isLogIn && isMainnet" -->
     <header class="page-header">
       <Navbar />
     </header>
@@ -12,10 +12,8 @@
           <div class="tiles-left">{{ tileLeft.toLocaleString() }} tiles left</div>
           <div class="last-price">LAST TILE PRICE: {{ lastPrice }} ETH</div>
           <div class="current-price">CURRENT PRICE: <span>{{ currentPrice }} ETH</span></div>
-          <div class="not-install" v-if="isInstalled === false">MetaMask is not installed.</div>
-          <div class="not-login" v-else-if="isLogIn === false">MetaMask is not login.</div>
-          <div class="not-mainnet" v-else-if="isMainnet === false">Your are not on the Main Ethereum Network.</div>
-          <div class="button-group" v-else-if="isInstalled && isLogIn && isMainnet">
+          <div class="button-group">
+            <button class="create" @click="create">Create</button>
             <button class="buy1" @click="buyTile">BUY 1</button>
             <button class="buy3" @click="bulkBuyTile">BUY 3</button>
           </div>
@@ -59,6 +57,16 @@
     </div>
     <div class="footer"><Footer /></div>
   </div>
+  <div class="message-tab" v-else>
+    <div class="alert-msg">
+      <Navbar />
+      <div class="not-install" v-if="isInstalled === false">MetaMask is not installed.</div>
+      <div class="not-login" v-else-if="isLogIn === false">MetaMask is not login.</div>
+      <div class="not-mainnet" v-else-if="isMainnet === false">Your are not on the Main Ethereum Network.</div>
+    </div>
+    <div class="alert-footer"><Footer /></div>
+  </div>
+
 </template>
 
 <script>
@@ -78,63 +86,48 @@ export default {
       isLogIn: undefined,
       isPurchaseBtn: undefined,
       isMainnet: undefined,
-      account: null,
       currentPrice: '.00000',
       lastPrice: '.00000',
-      tileLeft: 10000
+      tileLeft: 0,
+      bulkQuantity: 3,
     }
   },
   methods: {
     init () {
       const vm = this
-      if (typeof web3 !== 'undefined') {
-        vm.web3 = new Web3(web3.currentProvider)
-        vm.isInstalled = true
-        vm.checkStatus()
-      } else {
-        // vm.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"))
-        vm.isInstalled = false
-      }
+      // if (typeof web3 !== 'undefined') {
+      //   vm.web3 = new Web3(web3.currentProvider)
+      //   vm.isInstalled = true
+      //   vm.checkStatus()
+      // } else {
+        vm.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"))
+      //   vm.isInstalled = false
+      // }
 
       vm.accountInterval = setInterval(function() {
-        if (vm.web3.eth.accounts[0] !== vm.account) {
-          vm.account = vm.web3.eth.accounts[0]
+        if (vm.web3.eth.accounts[0] !== vm.web3.eth.defaultAccount) {
+          vm.web3.eth.defaultAccount = vm.web3.eth.accounts[0]
           vm.checkStatus()
         }
       }, 1000)
-
+      
       vm.CoursetroContract = vm.web3.eth.contract(abi)
-      vm.Contract = vm.CoursetroContract.at('0x2111a1a8aad809b29aa38199d5b81bd6d0604897')
-
-      vm.Contract.tilePrice(function(error, result){
-        if(!error) {
-          console.log(vm.web3.fromWei(result.toNumber(), "ether" ))
-          vm.currentPrice = vm.web3.fromWei(result.toNumber(), "ether").replace('0.', '.')
-        } else {
-          console.error(error)
-        }
-      })
-
-      vm.Contract.totalSupply(function(error, result){
-        if(!error)
-          console.log(result.toNumber())
-        else
-          console.error(error)
-      })
+      vm.Contract = vm.CoursetroContract.at('0x83fd6b53c2dc46e7a0b5953a2a59a27bc098a224')
+      
+      vm.updateUI()
     },
     checkStatus () {
       const vm = this
-
-      console.log(vm.web3.eth.accounts)
-
-      vm.web3.eth.getAccounts((err, acc) => {
-        if (err != null) {
-          console.error("An error occurred: " + err)
-        } else if (acc.length == 0) {
-          vm.isLogIn = false
+      vm.web3.eth.getAccounts((error, account) => {
+        if(!error) {
+          if (account.length == 0) {
+            vm.isLogIn = false
+          } else {
+            vm.isLogIn = true
+            vm.web3.eth.defaultAccount = account[0]
+          }
         } else {
-          vm.isLogIn = true
-          vm.account = acc[0]
+          console.error(error)
         }
       })
 
@@ -148,100 +141,78 @@ export default {
         }
       })
     },
+    updateUI () {
+      this.getPrice()
+      this.getSoldTileCount()
+    },
     buyTile () {
-      alert('Buy 1 tile')
+      const vm = this
+      // // console.log(vm.account, vm.web3.toWei(Number(vm.currentPrice)))
+      vm.Contract.purchaseTile.sendTransaction({ from: vm.account, value: vm.web3.toWei(Number(vm.currentPrice)), gas: 4000000 })
+      vm.updateUI()
+      console.log('Bought 1 tile')
     },
     bulkBuyTile () {
-      alert('Buy 5 tile')
+      const vm = this
+      vm.Contract.bulkPurchaseTile.sendTransaction({ from: vm.account, value: vm.web3.toWei(Number(vm.currentPrice * vm.bulkQuantity)), gas: 4000000 })
+      vm.updateUI()
+      console.log('Bought 5 tiles')
     },
-    tempUpdate () {
-      // example1
-      console.log(document.querySelector("#name").value)
-      console.log(document.querySelector("#age").value)
-      this.Coursetro.setInstructor(document.querySelector("#name").value, document.querySelector("#age").value)
-    },
-    example1 () {
-      // https://coursetro.com/posts/code/99/Interacting-with-a-Smart-Contract-through-Web3.js-(Tutorial)
-      if (typeof web3 !== 'undefined') {
-        vm.web3 = new Web3(web3.currentProvider);
-      } else {
-        // set the provider you want from Web3.providers
-        vm.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"))
-        console.log('please install MetaMask')
-      }
-      vm.web3.eth.defaultAccount = vm.web3.eth.accounts[0]
-
-      const CoursetroContract = vm.web3.eth.contract([{"constant": false, "inputs": [{"name": "_fName", "type": "string"}, {"name": "_age", "type": "uint256"} ], "name": "setInstructor", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function"},{"constant": true, "inputs": [], "name": "getInstructor", "outputs": [{"name": "", "type": "string"}, {"name": "", "type": "uint256"} ], "payable": false, "stateMutability": "view", "type": "function"}])
-
-      vm.Coursetro = CoursetroContract.at('0xfd5e120f67de6a0e465ec9f6a5e61b56fe084977')
-      console.log(vm.Coursetro)
-
-      vm.Coursetro.getInstructor(function(error, result){
-        if(!error)
-          {
-            document.querySelector("#instructor").innerHTML = result[0]+' ('+result[1]+' years old)'
-            console.log(result)
-          }
-        else
+    getPrice () {
+      const vm = this
+      vm.Contract.tilePrice((error, result) => {
+        if(!error) {
+          // console.log(vm.web3.fromWei(result.toNumber(), "ether" ) - 0.000215)
+          vm.currentPrice = vm.web3.fromWei(result.toNumber(), "ether").replace('0.', '.')
+          vm.lastPrice = (vm.web3.fromWei(result.toNumber(), "ether") - 0.000215).toString().replace('0.', '.')
+        } else {
           console.error(error)
+        }
       })
+    },
+    getSoldTileCount () {
+      const vm = this
+      vm.Contract.totalSupply(function(error, result){
+        if(!error) {
+          // console.log(result.toNumber())
+          vm.tileLeft = 10000 - result.toNumber()
+        } else {
+          console.error(error)
+        }
+      })
+    },
+    create () {
+      const vm = this
+      vm.Contract.unpausePresale({ value: 0, from: vm.web3.eth.defaultAccount })
+      vm.Contract.mintGenesisByzantineTile(vm.web3.eth.defaultAccount, { value: 0, from: vm.web3.eth.defaultAccount, gas: 3000000 })
+      vm.updateUI()
     }
   },
   mounted () {
     this.init()
-
-    // const vm = this
-    // if (typeof web3 !== 'undefined') {
-    //   vm.isInstalled = true
-    //   vm.metamaskInit()
-    // } else {
-    //   // set the provider you want from Web3.providers
-    //   // vm.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"))
-    //   vm.isInstalled = false
-    // }
-
-
-
-    // console.log(vm.web3)
-
-    // vm.web3.eth.defaultAccount = vm.web3.eth.accounts[0]
 
   }
 }
 </script>
 
 <style scoped>
-{/*
-body {
-    background-color:#F0F0F0;
-    padding: 2em;
-    font-family: 'Raleway','Source Sans Pro', 'Arial';
-}
-.container {
-    width: 50%;
-    margin: 0 auto;
-}
-label {
-    display:block;
-    margin-bottom:10px;
-}
-input {
-    padding:10px;
-    width: 50%;
-    margin-bottom: 1em;
-}
-button {
-    margin: 2em 0;
-    padding: 1em 4em;
-    display:block;
-}
 
-#instructor {
-    padding:1em;
-    background-color:#fff;
-    margin: 1em 0;
+.message-tab {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 }
-*/}
+.alert-msg {
+  flex: 1 1  auto;
+  background-color: #1E226B;
+  background-image: url('~assets/bk-stars-1.png'), url('~assets/bk-stars-2.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  color: #fff;
+}
+.alert-footer {
+  flex: 0 0 auto;
+}
 
 .get-space {
   display: flex;
