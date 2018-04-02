@@ -1,5 +1,5 @@
 <template>
-  <div class="get-space" v-if="true" ><!-- v-if="isInstalled && isLogIn && isMainnet" -->
+  <div class="get-space" v-if="isInstalled && isLogIn && isMainnet">
     <header class="page-header">
       <Navbar />
     </header>
@@ -13,24 +13,14 @@
           <div class="last-price">LAST TILE PRICE: {{ lastPrice }} ETH</div>
           <div class="current-price">CURRENT PRICE: <span>{{ currentPrice }} ETH</span></div>
           <div class="button-group">
-            <button class="create" @click="create">Create</button>
+            <!-- <button class="create" @click="unpause">Create</button> -->
+          </div>
+          <div class="button-group">
             <button class="buy1" @click="buyTile">BUY 1</button>
             <button class="buy3" @click="bulkBuyTile">BUY 3</button>
           </div>
         </div>
       </div>
-
-      <!-- example1 -->
-      <!-- <div class="container">
-        <h1>Coursetro Instructor</h1>
-        <h2 id="instructor"></h2>
-        <label for="name" class="col-lg-2 control-label">Instructor Name</label>
-        <input id="name" type="text">
-        <label for="name" class="col-lg-2 control-label">Instructor Age</label>
-        <input id="age" type="text">
-        <button id="button" @click="tempUpdate">Update Instructor</button>
-      </div> -->
-
 
       <div class="detail">
         <div class="detail-title">DETAILS</div>
@@ -59,10 +49,29 @@
   </div>
   <div class="message-tab" v-else>
     <div class="alert-msg">
-      <Navbar />
-      <div class="not-install" v-if="isInstalled === false">MetaMask is not installed.</div>
-      <div class="not-login" v-else-if="isLogIn === false">MetaMask is not login.</div>
-      <div class="not-mainnet" v-else-if="isMainnet === false">Your are not on the Main Ethereum Network.</div>
+      <div class="alert-header"><Navbar /></div>
+      <div class="not-install" v-if="isInstalled === false">
+        <div class="alert-title">SET UP METAMASK</div>
+        <div class="alert-subtitle"><a href="https://metamask.io/" target="_blank">download and install it here</a></div>
+      </div>
+      <div class="not-login" v-else-if="isLogIn === false">
+        <div class="alert-title">YOUR METAMASK IS LOCKED</div>
+        <div class="alert-subtitle">OPEN METAMASK AND LOG IN TO JOIN THE QUEST</div>
+        <div class="alert-img-wrapper">
+          <div class="alert-img">
+            <img src="~assets/loggedout.png" alt="YOUR METAMASK IS LOCKED">
+          </div>
+        </div>  
+      </div>
+      <div class="not-mainnet" v-else-if="isMainnet === false">
+        <div class="alert-title">OH NO! YOU'RE ON THE WRONG NETWORK</div>
+        <div class="alert-subtitle">SIMPLY OPEN METAMASK AND SWITCH TO THE MAIN ETHEREUM NETWORK</div>
+        <div class="alert-img-wrapper">
+          <div class="alert-img">
+            <img src="~assets/mainnetwork.png" alt="ON THE WRONG NETWORK">
+          </div>
+        </div>  
+      </div>
     </div>
     <div class="alert-footer"><Footer /></div>
   </div>
@@ -90,19 +99,21 @@ export default {
       lastPrice: '.00000',
       tileLeft: 0,
       bulkQuantity: 3,
+      startingPrice: 0.01011,
+      increaseRate: 0.000215,
     }
   },
   methods: {
     init () {
       const vm = this
-      // if (typeof web3 !== 'undefined') {
-      //   vm.web3 = new Web3(web3.currentProvider)
-      //   vm.isInstalled = true
-      //   vm.checkStatus()
-      // } else {
+      if (typeof web3 !== 'undefined') {
+        vm.web3 = new Web3(web3.currentProvider)
+        vm.isInstalled = true
+        vm.checkStatus()
+      } else {
         vm.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"))
-      //   vm.isInstalled = false
-      // }
+        vm.isInstalled = false
+      }
 
       vm.accountInterval = setInterval(function() {
         if (vm.web3.eth.accounts[0] !== vm.web3.eth.defaultAccount) {
@@ -112,7 +123,16 @@ export default {
       }, 1000)
       
       vm.CoursetroContract = vm.web3.eth.contract(abi)
-      vm.Contract = vm.CoursetroContract.at('0x83fd6b53c2dc46e7a0b5953a2a59a27bc098a224')
+      vm.Contract = vm.CoursetroContract.at('0x6b0949805cb2bddf91ea221695d7c949acb33357')
+      // 0x6b0949805cb2bddf91ea221695d7c949acb33357
+
+      vm.Contract.TilesPurchased(function(error, result) {
+        if (!error) {
+          console.log('purchased', result)   
+          vm.updateUI()
+        } else
+          console.log('purchased', error)
+       })
       
       vm.updateUI()
     },
@@ -133,6 +153,7 @@ export default {
 
       vm.web3.version.getNetwork((err, netId) => {
         switch (netId) {
+          case "3":
           case "1":
             vm.isMainnet = true
             break
@@ -142,29 +163,43 @@ export default {
       })
     },
     updateUI () {
+      console.log('UI updated')
       this.getPrice()
       this.getSoldTileCount()
     },
     buyTile () {
       const vm = this
-      // // console.log(vm.account, vm.web3.toWei(Number(vm.currentPrice)))
-      vm.Contract.purchaseTile.sendTransaction({ from: vm.account, value: vm.web3.toWei(Number(vm.currentPrice)), gas: 4000000 })
-      vm.updateUI()
-      console.log('Bought 1 tile')
+      vm.Contract.purchaseTile.sendTransaction(
+        { from: vm.account, value: vm.web3.toWei(Number(vm.currentPrice)), gas: 300000 },
+        function (error, result) {
+          if(!error) {
+            console.log('Bought 1 tile')
+          } else {
+            console.log(error)
+          }
+        }
+      )
     },
     bulkBuyTile () {
       const vm = this
-      vm.Contract.bulkPurchaseTile.sendTransaction({ from: vm.account, value: vm.web3.toWei(Number(vm.currentPrice * vm.bulkQuantity)), gas: 4000000 })
-      vm.updateUI()
-      console.log('Bought 5 tiles')
+      vm.Contract.bulkPurchaseTile.sendTransaction(
+        { from: vm.account, value: vm.web3.toWei(Number(vm.currentPrice * vm.bulkQuantity)), gas: 300000 },
+        function (error, result) {
+          if(!error) {
+            console.log('Bought 3 tiles')
+          } else {
+            console.log(error)
+          }
+        }
+      )
     },
     getPrice () {
       const vm = this
       vm.Contract.tilePrice((error, result) => {
         if(!error) {
-          // console.log(vm.web3.fromWei(result.toNumber(), "ether" ) - 0.000215)
-          vm.currentPrice = vm.web3.fromWei(result.toNumber(), "ether").replace('0.', '.')
-          vm.lastPrice = (vm.web3.fromWei(result.toNumber(), "ether") - 0.000215).toString().replace('0.', '.')
+          const price = vm.web3.fromWei(result.toNumber(), "ether")
+          vm.currentPrice = price.replace('0.', '.')
+          vm.lastPrice = price !== vm.startingPrice ? (price - vm.increaseRate).toString().replace('0.', '.') : '.00000'
         } else {
           console.error(error)
         }
@@ -174,23 +209,45 @@ export default {
       const vm = this
       vm.Contract.totalSupply(function(error, result){
         if(!error) {
-          // console.log(result.toNumber())
           vm.tileLeft = 10000 - result.toNumber()
         } else {
           console.error(error)
         }
       })
     },
-    create () {
+    unpause () {
       const vm = this
-      vm.Contract.unpausePresale({ value: 0, from: vm.web3.eth.defaultAccount })
-      vm.Contract.mintGenesisByzantineTile(vm.web3.eth.defaultAccount, { value: 0, from: vm.web3.eth.defaultAccount, gas: 3000000 })
-      vm.updateUI()
+      vm.Contract.unpausePresale({ value: 0, from: vm.web3.eth.defaultAccount }, function (error, result) {
+        if(!error) {
+          console.log(result)
+          vm.mintGenesisTile()
+          vm.updateUI()
+        } else {
+          console.log(error)
+        }
+      })
+    },
+    mintGenesisTile () {
+      vm.Contract.mintGenesisByzantineTile(
+        vm.web3.eth.defaultAccount, 
+        { value: 0, from: vm.web3.eth.defaultAccount, gas: 3000000 }, 
+        function (error, result) {
+          if(!error) {
+            console.log(result)
+          } else {
+            console.log(error)
+          }
+        }
+      )
     }
   },
   mounted () {
     this.init()
-
+  },
+  watch: {
+    '$nuxt.$route' () {
+      this.init()
+    }
   }
 }
 </script>
@@ -204,12 +261,64 @@ export default {
 }
 .alert-msg {
   flex: 1 1  auto;
+  position: relative;
   background-color: #1E226B;
-  background-image: url('~assets/bk-stars-1.png'), url('~assets/bk-stars-2.png');
-  background-size: 100%;
-  background-repeat: no-repeat;
   color: #fff;
 }
+.alert-msg:before {
+  content: "";
+  top: 0;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-image: url('~assets/bk-stars-1.png'), url('~assets/bk-stars-2.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  opacity: 0.5;
+}
+.alert-header {
+  position: relative;
+  z-index: 2;
+}
+
+.not-install,
+.not-login,
+.not-mainnet {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 2;
+  font-family: "arame-regular", sans-serif;
+  text-align: center;
+  height: calc(100vh - 147px);
+}
+
+.alert-title {
+  flex: 0 0 auto;
+  padding: 40px 24px 20px;
+  font-size: 34px;
+  letter-spacing: .1em;
+}
+.alert-subtitle {
+  flex: 0 0 auto;
+  padding-bottom: 50px;
+  font-size: 20px;
+}
+.alert-img-wrapper {
+  flex: 1 1 auto;
+  position: relative;
+}
+.alert-img {
+  position: absolute;
+  top: 0;
+  bottom: 40px;
+  width: 100%;
+}
+.alert-img img {
+  height: 100%;
+}
+
 .alert-footer {
   flex: 0 0 auto;
 }
@@ -222,11 +331,21 @@ export default {
 
 .page-header {
   flex: 0 0;
+  position: relative;
   padding-bottom: 200px;
   background-color: #1E226B;
+}
+.page-header:before {
+  content: "";
+  top: 0;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
   background-image: url('~assets/bk-stars-1.png'), url('~assets/bk-stars-2.png');
   background-size: 100%;
   background-repeat: no-repeat;
+  opacity: 0.5;
 }
 
 .content-wrapper {
@@ -250,7 +369,9 @@ export default {
 }
 .info {
   flex: 3;
+  position: relative;
   margin-left: 60px;
+  z-index: 2;
 }
 .tiles-left {
   margin-top: 100px;
@@ -280,6 +401,7 @@ export default {
 .button-group {
   margin-top: 20px;
 }
+.create,
 .buy1,
 .buy3 {
   padding: .7em 2em;
@@ -387,6 +509,12 @@ export default {
   .tiles-left {
     margin-top: 40px;
     color: #212121;
+  }
+  .alert-title {
+    font-size: 28px;
+  }
+  .alert-subtitle {
+    font-size: 20px;
   }
 }
 @media (max-width: 345px) {
