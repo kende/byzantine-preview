@@ -18,7 +18,7 @@
           <div class="star-icon"><img src="~assets/large-star.png" alt="star" height="40" width="40"></div>
           <h4 class="section-subtitle">What is this?</h4>
           <p class="answer">The Byzantine Space Quest is the first of many quests in our multiverse that spans the digital and physical worlds. Your first quest? Collect and trade digital space - starting in outer space!</p>
-          <p class="answer">For every tile purchased, you'll be contributing .02 ETH of the resale price for connecting our world with <a href="https://nycmesh.net/faq/" target="_blank">mesh networks</a>, receive a physical tile in the form of an enamel pin, and see your tile projected across the digital and physical worlds in light installations throughout <a href="https://liminal.network/" target="_blank">Liminal</a> spaces and beyond.</p>
+          <p class="answer">For every tile purchased, a .02 ETH contribution is given to connect our world with <a href="https://nycmesh.net/faq/" target="_blank">mesh networks</a>, the first 10k tile owners will receive a physical representation of your Proof of Community Stake, in the form of an enamel pin. You will see your tile projected across the digital and physical worlds in light installations throughout <a href="https://liminal.network/" target="_blank">Liminal</a> spaces and beyond.</p>
         </section>
         <section class="rewards">
           <h4 class="section-subtitle">Quest Rewards</h4>
@@ -210,7 +210,7 @@ export default {
   font-family: "rational-light", sans-serif;
   font-size: 1em;
   letter-spacing: 1px;
-  max-width: 610px;
+  max-width: 650px;
   line-height: 1.6em;
 }
 .answer a {
