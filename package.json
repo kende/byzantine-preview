@@ -16,7 +16,7 @@
     "@nuxtjs/font-awesome": "^1.0.3",
     "axios": "^0.18.0",
     "nuxt": "^1.0.0",
-    "web3": "github:ethereum/web3.js"
+    "web3": "^1.0.0-beta.33"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.1",
