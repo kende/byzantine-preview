@@ -1,19 +1,19 @@
 <template>
   <ul class="side-navbar">
-    <li class="side-nav-item" v-bind:class="{ active: currPage === 'startquest' }">
-      <nuxt-link to='/startquest'>Origin</nuxt-link>
+    <li class="side-nav-item" v-bind:class="{ active: currPage === 'start' }">
+      <nuxt-link to='/spacequest/start'>Origin</nuxt-link>
     </li>
-    <li class="side-nav-item" v-bind:class="{ active: currPage === 'startquest-getstarted' }">
-      <nuxt-link to='/startquest/getstarted'>Get Started</nuxt-link>
+    <li class="side-nav-item" v-bind:class="{ active: currPage === 'getstarted' }">
+      <nuxt-link to='/spacequest/start/getstarted'>Get Started</nuxt-link>
     </li>
-    <li class="side-nav-item" v-bind:class="{ active: currPage === 'startquest-detail' }">
-      <nuxt-link to='/startquest/detail'>The Details</nuxt-link>
+    <li class="side-nav-item" v-bind:class="{ active: currPage === 'detail' }">
+      <nuxt-link to='/spacequest/start/detail'>The Details</nuxt-link>
     </li>
-    <li class="side-nav-item" v-bind:class="{ active: currPage === 'startquest-next' }">
-      <nuxt-link to='/startquest/next'>What's Next?</nuxt-link>
+    <li class="side-nav-item" v-bind:class="{ active: currPage === 'next' }">
+      <nuxt-link to='/spacequest/start/next'>What's Next?</nuxt-link>
     </li>
     <!-- <li class="side-nav-item" v-bind:class="{ active: currPage === 'startquest-FAQ' }">
-      <nuxt-link to='/startquest/FAQ'>FAQ</nuxt-link>
+      <nuxt-link to='/spacequest/start/FAQ'>FAQ</nuxt-link>
     </li> -->
   </ul>
 </template>
@@ -25,13 +25,17 @@ export default {
       currPage: null
     }
   },
+  methods: {
+    setRouteName () {
+      this.currPage = $nuxt.$route.name.replace('spacequest-', '').replace('start-', '')
+    }
+  },
   mounted () {
-    this.currPage = $nuxt.$route.name
-    console.log(this.currPage)
+    this.setRouteName()
   },
   watch: {
     '$nuxt.$route' () {
-      this.currPage = $nuxt.$route.name
+      this.setRouteName()
     }
   }
 }
