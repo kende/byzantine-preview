@@ -15,9 +15,12 @@
           <div class="button-group">
             <!-- <button class="create" @click="unpause">Create</button> -->
           </div>
-          <div class="button-group">
+          <div class="button-group" v-if="!inTransaction">
             <button class="buy1" @click="buyTile">BUY 1</button>
             <button class="buy3" @click="bulkBuyTile">BUY 3</button>
+          </div>
+          <div class="in-transaction" v-else>
+            <div class="loading-icon" v-bind:key="n" v-for="n in purchasedCount"><img src="~/assets/loading-icon.png"></div>
           </div>
         </div>
       </div>
@@ -101,6 +104,8 @@ export default {
       bulkQuantity: 3,
       startingPrice: 0.01011,
       increaseRate: 0.000215,
+      inTransaction: false,
+      purchasedCount: 1,
     }
   },
   methods: {
@@ -128,7 +133,9 @@ export default {
 
       vm.Contract.TilesPurchased(function(error, result) {
         if (!error) {
-          console.log('purchased', result)   
+          console.log('purchased', result)
+          vm.inTransaction = false
+          vm.purchasedCount = 1
           vm.updateUI()
         } else
           console.log('purchased', error)
@@ -169,6 +176,7 @@ export default {
     },
     buyTile () {
       const vm = this
+      vm.inTransaction = true
       vm.Contract.purchaseTile.sendTransaction(
         { from: vm.account, value: vm.web3.toWei(Number(vm.currentPrice)), gas: 300000 },
         function (error, result) {
@@ -182,6 +190,8 @@ export default {
     },
     bulkBuyTile () {
       const vm = this
+      vm.inTransaction = true
+      vm.purchasedCount = vm.bulkQuantity
       vm.Contract.bulkPurchaseTile.sendTransaction(
         { from: vm.account, value: vm.web3.toWei(Number(vm.currentPrice * vm.bulkQuantity)), gas: 300000 },
         function (error, result) {
@@ -474,6 +484,34 @@ export default {
 
 .footer {
   flex: 0 0;
+}
+
+.in-transaction {
+  display: flex;
+}
+.loading-icon {
+  animation: rotate 2s infinite;
+}
+.loading-icon:nth-child(2) {
+  animation-delay: .2s;
+}
+.loading-icon:last-child {
+  animation-delay: .4s;
+}
+.loading-icon img {
+  height: 60px;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotateY(0deg);
+  }
+  50% {
+    transform: rotateY(180deg);
+  }
+  100% {
+    transform: rotateY(360deg);
+  }
 }
 
 @media (max-width: 804px) {
