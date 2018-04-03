@@ -12,8 +12,9 @@
           <div class="tiles-left">{{ tileLeft.toLocaleString() }} tiles left</div>
           <div class="last-price">LAST TILE PRICE: {{ lastPrice }} ETH</div>
           <div class="current-price">CURRENT PRICE: <span>{{ currentPrice }} ETH</span></div>
-          <div class="button-group" v-if="tileLeft === 10000">
+          <div class="button-group" v-if="tileLeft > 9000">
             <button class="create" @click="unpause">Create</button>
+            <button class="reserved-buy" @click="mintGenesisTile" v-if="tileLeft < 10000 ">Buy</button>
           </div>
           <div v-else-if="tileLeft < 10000">
             <div class="button-group" v-if="!inTransaction  ">
@@ -128,7 +129,7 @@ export default {
     startApp () {
       const vm = this
       if (vm.isInstalled) {
-        const contractAddress = '0x7833ec7a3d000cfaecfa186fd9166eb96cb16d49'
+        const contractAddress = '0x56af063bbc0ada88ac93e56e2743d640d9ddb7ec'
         // '0x6b0949805cb2bddf91ea221695d7c949acb33357'
         vm.Contract = new vm.web3.eth.Contract(abi, contractAddress)
 
@@ -434,6 +435,7 @@ export default {
   margin-top: 20px;
 }
 .create,
+.reserved-buy,
 .buy1,
 .buy3 {
   padding: .7em 2em;
@@ -445,6 +447,7 @@ export default {
   letter-spacing: 2px;
   cursor: pointer;
 }
+.reserved-buy,
 .buy3 {
   margin-left: 20px;
 }
