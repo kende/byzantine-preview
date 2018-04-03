@@ -1,5 +1,5 @@
 <template>
-  <div class="get-space" v-if="isInstalled && isLogIn && isMainnet">
+  <div class="get-space" v-if="true"><!--  v-if="isInstalled && isLogIn && isMainnet" -->
     <header class="page-header">
       <Navbar />
     </header>
@@ -12,15 +12,17 @@
           <div class="tiles-left">{{ tileLeft.toLocaleString() }} tiles left</div>
           <div class="last-price">LAST TILE PRICE: {{ lastPrice }} ETH</div>
           <div class="current-price">CURRENT PRICE: <span>{{ currentPrice }} ETH</span></div>
-          <div class="button-group">
-            <!-- <button class="create" @click="unpause">Create</button> -->
+          <div class="button-group" v-if="tileLeft === 10000">
+            <button class="create" @click="unpause">Create</button>
           </div>
-          <div class="button-group" v-if="!inTransaction">
-            <button class="buy1" @click="buyTile">BUY 1</button>
-            <button class="buy3" @click="bulkBuyTile">BUY 3</button>
-          </div>
-          <div class="in-transaction" v-else>
-            <div class="loading-icon" v-bind:key="n" v-for="n in purchasedCount"><img src="~/assets/loading-icon.png"></div>
+          <div v-else-if="tileLeft < 10000">
+            <div class="button-group" v-if="!inTransaction  ">
+              <button class="buy1" @click="buyTile">BUY 1</button>
+              <button class="buy3" @click="bulkBuyTile">BUY 3</button>
+            </div>
+            <div class="in-transaction" v-else>
+              <div class="loading-icon" v-bind:key="n" v-for="n in purchasedCount"><img src="~/assets/loading-icon.png"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -76,7 +78,7 @@
         </div>  
       </div>
     </div>
-    <div class="alert-footer"><Footer /></div>
+    <div class="alert-footer" v-if="isInstalled === false || isLogIn === false || isMainnet === false"><Footer /></div>
   </div>
 
 </template>
@@ -100,10 +102,10 @@ export default {
       isMainnet: undefined,
       currentPrice: '.00000',
       lastPrice: '.00000',
-      tileLeft: 0,
+      tileLeft: "10,000",
       bulkQuantity: 3,
-      startingPrice: 0.01011,
-      increaseRate: 0.000215,
+      startingPrice: 0.021111,
+      increaseRate: 0.001011,
       inTransaction: false,
       purchasedCount: 1,
     }
@@ -111,57 +113,64 @@ export default {
   methods: {
     init () {
       const vm = this
-      if (typeof web3 !== 'undefined') {
-        vm.web3 = new Web3(web3.currentProvider)
+      // if (typeof web3 !== 'undefined') {
+      //   vm.web3 = new Web3(web3.currentProvider)
         vm.isInstalled = true
-        vm.checkStatus()
-      } else {
+      //   // console.log('currentProvider')
+      // } else {
         vm.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"))
-        vm.isInstalled = false
-      }
+      //   vm.isInstalled = false
+      //   // console.log('http://localhost:8545')
+      // }
 
-      vm.accountInterval = setInterval(function() {
-        if (vm.web3.eth.accounts[0] !== vm.web3.eth.defaultAccount) {
-          vm.web3.eth.defaultAccount = vm.web3.eth.accounts[0]
-          vm.checkStatus()
-        }
-      }, 1000)
-      
-      vm.CoursetroContract = vm.web3.eth.contract(abi)
-      vm.Contract = vm.CoursetroContract.at('0x6b0949805cb2bddf91ea221695d7c949acb33357')
-      // 0x6b0949805cb2bddf91ea221695d7c949acb33357
-
-      vm.Contract.TilesPurchased(function(error, result) {
-        if (!error) {
-          console.log('purchased', result)
-          vm.inTransaction = false
-          vm.purchasedCount = 1
-          vm.updateUI()
-        } else
-          console.log('purchased', error)
-       })
-      
-      vm.updateUI()
+      vm.startApp()
     },
-    checkStatus () {
+    startApp () {
       const vm = this
-      vm.web3.eth.getAccounts((error, account) => {
-        if(!error) {
-          if (account.length == 0) {
-            vm.isLogIn = false
-          } else {
-            vm.isLogIn = true
-            vm.web3.eth.defaultAccount = account[0]
-          }
+      if (vm.isInstalled) {
+        const contractAddress = '0x7833ec7a3d000cfaecfa186fd9166eb96cb16d49'
+        // '0x6b0949805cb2bddf91ea221695d7c949acb33357'
+        vm.Contract = new vm.web3.eth.Contract(abi, contractAddress)
+
+        vm.accountInterval = setInterval(function() {
+          vm.getAccount()
+        }, 800)
+
+        vm.checkNet()
+        vm.getSoldTileCount()
+
+        // vm.Contract.TilesPurchased(function(error, result) {
+        //   if (!error) {
+        //     vm.inTransaction = false
+        //     vm.purchasedCount = 1
+        //     vm.getSoldTileCount()
+        //     console.log('purchased')
+        //   } else
+        //     console.log('purchased', error)
+        // })
+      }
+    },
+    getAccount () {
+      const vm = this
+      const accounts = this.web3.eth.getAccounts()
+
+      accounts.then(account => {
+        if (account.length === 0) {
+          vm.isLogIn = false
         } else {
-          console.error(error)
+          vm.isLogIn = true
+          if (vm.web3.eth.defaultAccount !== account[0]) vm.web3.eth.defaultAccount = account[0]
         }
       })
+    },
+    checkNet () {
+      const vm = this
+      const net = vm.web3.eth.net.getId()
 
-      vm.web3.version.getNetwork((err, netId) => {
+      net.then(netId => {
         switch (netId) {
-          case "3":
-          case "1":
+          case 3:
+          case 1:
             vm.isMainnet = true
             break
           default:
@@ -169,86 +178,99 @@ export default {
         }
       })
     },
-    updateUI () {
-      console.log('UI updated')
-      this.getPrice()
-      this.getSoldTileCount()
-    },
+    // getSoldTileCount () {
+    //   // this.getPrice()
+    //   this.getSoldTileCount()
+    // },
     buyTile () {
       const vm = this
       vm.inTransaction = true
-      vm.Contract.purchaseTile.sendTransaction(
-        { from: vm.account, value: vm.web3.toWei(Number(vm.currentPrice)), gas: 300000 },
-        function (error, result) {
-          if(!error) {
-            console.log('Bought 1 tile')
-          } else {
-            console.log(error)
-          }
-        }
-      )
+
+      const purchaseTile = vm.Contract.methods.purchaseTile().send({ 
+        from: vm.web3.eth.defaultAccount, 
+        gas: 300000 ,
+        value: vm.web3.utils.toWei(vm.currentPrice)
+      })
+
+      purchaseTile.on("receipt", result => {
+        console.log(result)
+      })
+
+      // vm.Contract.purchaseTile.sendTransaction(
+      //   { from: vm.account, value: vm.web3.toWei(Number(vm.currentPrice)), gas: 300000 },
+      //   function (error, result) {
+      //     if(!error) {
+      //       console.log('Bought 1 tile')
+      //     } else {
+      //       console.log(error)
+      //     }
+      //   }
+      // )
     },
     bulkBuyTile () {
       const vm = this
       vm.inTransaction = true
-      vm.purchasedCount = vm.bulkQuantity
-      vm.Contract.bulkPurchaseTile.sendTransaction(
-        { from: vm.account, value: vm.web3.toWei(Number(vm.currentPrice * vm.bulkQuantity)), gas: 300000 },
-        function (error, result) {
-          if(!error) {
-            console.log('Bought 3 tiles')
-          } else {
-            console.log(error)
-          }
-        }
-      )
+
+      const purchaseTile = vm.Contract.methods.purchaseTile().send({ 
+        from: vm.web3.eth.defaultAccount, 
+        gas: 300000 ,
+        value: vm.web3.utils.toWei(vm.currentPrice)
+      })
+
+      purchaseTile.on("receipt", result => {
+        console.log(result)
+      })
+
+      // vm.purchasedCount = vm.bulkQuantity
+      // vm.Contract.bulkPurchaseTile.sendTransaction(
+      //   { from: vm.account, value: vm.web3.toWei(Number(vm.currentPrice * vm.bulkQuantity)), gas: 300000 },
+      //   function (error, result) {
+      //     if(!error) {
+      //       console.log('Bought 3 tiles')
+      //     } else {
+      //       console.log(error)
+      //     }
+      //   }
+      // )
     },
     getPrice () {
       const vm = this
-      vm.Contract.tilePrice((error, result) => {
-        if(!error) {
-          const price = vm.web3.fromWei(result.toNumber(), "ether")
-          vm.currentPrice = price.replace('0.', '.')
-          vm.lastPrice = price !== vm.startingPrice ? (price - vm.increaseRate).toString().replace('0.', '.') : '.00000'
-        } else {
-          console.error(error)
-        }
+      const tilePrice = this.Contract.methods.tilePrice().call()
+
+      tilePrice.then(result => {
+        const price = vm.web3.utils.fromWei(result, "ether")
+        vm.currentPrice = price.replace('0.', '.')
+        console.log(vm.tileLeft)
+        vm.lastPrice = price !== vm.startingPrice ? (price - vm.increaseRate).toString().replace('0.', '.') : '.00000'
       })
     },
     getSoldTileCount () {
       const vm = this
-      vm.Contract.totalSupply(function(error, result){
-        if(!error) {
-          vm.tileLeft = 10000 - result.toNumber()
-        } else {
-          console.error(error)
-        }
+      const totalSupply = this.Contract.methods.totalSupply().call()
+
+      totalSupply.then(result => {
+        vm.tileLeft = 10000 - result
+        if (result > 0) this.getPrice()
       })
     },
     unpause () {
       const vm = this
-      vm.Contract.unpausePresale({ value: 0, from: vm.web3.eth.defaultAccount }, function (error, result) {
-        if(!error) {
-          console.log(result)
-          vm.mintGenesisTile()
-          vm.updateUI()
-        } else {
-          console.log(error)
-        }
+      const unpausePresale = vm.Contract.methods.unpausePresale().send({ from: vm.web3.eth.defaultAccount })
+
+      unpausePresale.on('receipt', result => {
+        vm.mintGenesisTile()
+        console.log('mintGenesisTile', result)
       })
     },
     mintGenesisTile () {
-      vm.Contract.mintGenesisByzantineTile(
-        vm.web3.eth.defaultAccount, 
-        { value: 0, from: vm.web3.eth.defaultAccount, gas: 3000000 }, 
-        function (error, result) {
-          if(!error) {
-            console.log(result)
-          } else {
-            console.log(error)
-          }
-        }
-      )
+      const vm = this
+      console.log(vm.web3.eth.defaultAccount)
+      const mintGenesisByzantineTile = vm.Contract.methods.mintGenesisByzantineTile(vm.web3.eth.defaultAccount).send({ from: vm.web3.eth.defaultAccount, gas: 300000 })
+
+      mintGenesisByzantineTile.on('receipt', result => {
+        console.log(result)
+        vm.getSoldTileCount()
+      })
     }
   },
   mounted () {
