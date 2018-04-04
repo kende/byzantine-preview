@@ -12,7 +12,7 @@
           <div class="tiles-left">{{ tileLeft.toLocaleString() }} tiles left</div>
           <div class="last-price">LAST TILE PRICE: {{ lastPrice }} ETH</div>
           <div class="current-price">CURRENT PRICE: <span>{{ currentPrice }} ETH</span></div>
-          <div class="button-group" v-if="tileLeft > 9000">
+          <div class="button-group" v-if="tileLeft > 9990">
             <button class="create" @click="unpause">Create</button>
             <button class="reserved-buy" @click="mintGenesisTile" v-if="tileLeft < 10000 ">Buy</button>
           </div>
@@ -103,7 +103,7 @@ export default {
       isMainnet: undefined,
       currentPrice: '.00000',
       lastPrice: '.00000',
-      tileLeft: "10,000",
+      tileLeft: '10,000',
       bulkQuantity: 3,
       startingPrice: 0.021111,
       increaseRate: 0.001011,
@@ -119,7 +119,7 @@ export default {
         vm.isInstalled = true
       //   // console.log('currentProvider')
       // } else {
-        vm.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"))
+        vm.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'))
       //   vm.isInstalled = false
       //   // console.log('http://localhost:8545')
       // }
@@ -129,7 +129,7 @@ export default {
     startApp () {
       const vm = this
       if (vm.isInstalled) {
-        const contractAddress = '0x56af063bbc0ada88ac93e56e2743d640d9ddb7ec'
+        const contractAddress = '0x633c9d79f92b35c4606492cedf92b9337ba7989d'
         // '0x6b0949805cb2bddf91ea221695d7c949acb33357'
         vm.Contract = new vm.web3.eth.Contract(abi, contractAddress)
 
@@ -140,15 +140,19 @@ export default {
         vm.checkNet()
         vm.getSoldTileCount()
 
-        // vm.Contract.TilesPurchased(function(error, result) {
-        //   if (!error) {
-        //     vm.inTransaction = false
-        //     vm.purchasedCount = 1
-        //     vm.getSoldTileCount()
-        //     console.log('purchased')
-        //   } else
-        //     console.log('purchased', error)
+        // // for temp
+        // const web3Infura = new Web3(new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws"))
+        // const contractEvents = new web3Infura.eth.Contract(abi, contractAddress)
+
+        // contractEvents.events.TilesPurchased({
+        //   filter: { purchaser: vm.web3.eth.defaultAccount }
+        // }, function (error, event) { 
+        //   console.log(event)
         // })
+        // .on('data', function(event){
+        //     console.log(event)
+        // })
+        // .on('error', console.error)
       }
     },
     getAccount () {
@@ -179,10 +183,6 @@ export default {
         }
       })
     },
-    // getSoldTileCount () {
-    //   // this.getPrice()
-    //   this.getSoldTileCount()
-    // },
     buyTile () {
       const vm = this
       vm.inTransaction = true
@@ -193,20 +193,14 @@ export default {
         value: vm.web3.utils.toWei(vm.currentPrice)
       })
 
-      purchaseTile.on("receipt", result => {
+      purchaseTile.on('receipt', result => {
         console.log(result)
+        vm.getSoldTileCount()
+        vm.inTransaction = false
       })
-
-      // vm.Contract.purchaseTile.sendTransaction(
-      //   { from: vm.account, value: vm.web3.toWei(Number(vm.currentPrice)), gas: 300000 },
-      //   function (error, result) {
-      //     if(!error) {
-      //       console.log('Bought 1 tile')
-      //     } else {
-      //       console.log(error)
-      //     }
-      //   }
-      // )
+      .on('error', err => {
+        console.error(err)
+      })
     },
     bulkBuyTile () {
       const vm = this
@@ -218,28 +212,21 @@ export default {
         value: vm.web3.utils.toWei(vm.currentPrice)
       })
 
-      purchaseTile.on("receipt", result => {
+      purchaseTile.on('receipt', result => {
         console.log(result)
+        vm.getSoldTileCount()
+        vm.inTransaction = false
       })
-
-      // vm.purchasedCount = vm.bulkQuantity
-      // vm.Contract.bulkPurchaseTile.sendTransaction(
-      //   { from: vm.account, value: vm.web3.toWei(Number(vm.currentPrice * vm.bulkQuantity)), gas: 300000 },
-      //   function (error, result) {
-      //     if(!error) {
-      //       console.log('Bought 3 tiles')
-      //     } else {
-      //       console.log(error)
-      //     }
-      //   }
-      // )
+      .on('error', err => {
+        console.error(err)
+      })
     },
     getPrice () {
       const vm = this
       const tilePrice = this.Contract.methods.tilePrice().call()
 
       tilePrice.then(result => {
-        const price = vm.web3.utils.fromWei(result, "ether")
+        const price = vm.web3.utils.fromWei(result, 'ether')
         vm.currentPrice = price.replace('0.', '.')
         console.log(vm.tileLeft)
         vm.lastPrice = price !== vm.startingPrice ? (price - vm.increaseRate).toString().replace('0.', '.') : '.00000'
@@ -262,6 +249,9 @@ export default {
         vm.mintGenesisTile()
         console.log('mintGenesisTile', result)
       })
+      .on('error', err => {
+        console.error(err)
+      })
     },
     mintGenesisTile () {
       const vm = this
@@ -271,6 +261,9 @@ export default {
       mintGenesisByzantineTile.on('receipt', result => {
         console.log(result)
         vm.getSoldTileCount()
+      })
+      .on('error', err => {
+        console.error(err)
       })
     }
   },
