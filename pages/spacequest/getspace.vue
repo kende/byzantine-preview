@@ -139,8 +139,8 @@ export default {
     startApp () {
       const vm = this
       if (vm.isInstalled) {
-        const contractAddress = '0xe08394fb0ed334751080d5c6127ec726bce6fecc'
-        // '0x6b0949805cb2bddf91ea221695d7c949acb33357'
+        const contractAddress = '0xe8a3da97393ab9b9f3aa1ef2a57a6cfbced0b7ad'
+        // '0xe8a3da97393ab9b9f3aa1ef2a57a6cfbced0b7ad'
 
         vm.Contract = new vm.web3.eth.Contract(abi, contractAddress)
 
