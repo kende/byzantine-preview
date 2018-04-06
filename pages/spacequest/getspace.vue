@@ -1,5 +1,5 @@
 <template>
-  <div class="get-space" v-if="true"><!--  v-if="isInstalled && isLogIn && isMainnet" -->
+  <div class="get-space" v-if="isInstalled && isLogIn && isMainnet">
     <header class="page-header">
       <Navbar />
     </header>
@@ -12,17 +12,23 @@
           <div class="tiles-left">{{ tileLeft.toLocaleString() }} tiles left</div>
           <div class="last-price">LAST TILE PRICE: {{ lastPrice }} ETH</div>
           <div class="current-price">CURRENT PRICE: <span>{{ currentPrice }} ETH</span></div>
-          <div class="button-group" v-if="tileLeft > 9990">
-            <button class="create" @click="unpause">Create</button>
-            <button class="reserved-buy" @click="mintGenesisTile" v-if="tileLeft < 10000 ">Buy</button>
-          </div>
-          <div v-else-if="tileLeft < 10000">
-            <div class="button-group" v-if="!inTransaction  ">
-              <button class="buy1" @click="buyTile">BUY 1</button>
-              <button class="buy3" @click="bulkBuyTile">BUY 3</button>
+          <div v-if="isPaused === false && isSaleEnded === false">
+            <div v-if="isSaleStarted">
+              <div class="button-group" v-if="!inTransaction">
+                <button class="buy1" @click="buyTile">BUY 1</button>
+                <button class="buy3" @click="bulkBuyTile" v-if="isBulkAvailable">BUY 3</button>
+              </div>
+              <div class="in-transaction" v-else>
+                <div class="loading-icon" v-bind:key="n" v-for="n in purchasedCount"><img src="~/assets/loading-icon.png"></div>
+              </div>
             </div>
-            <div class="in-transaction" v-else>
-              <div class="loading-icon" v-bind:key="n" v-for="n in purchasedCount"><img src="~/assets/loading-icon.png"></div>
+            <div class="button-group" v-else>
+              <button class="reserved-buy" @click="mintGenesisTile" v-if="tileLeft !== 10000 ">Buy</button>
+            </div>
+          </div>
+          <div v-else-if="isSaleEnded === false">
+            <div class="button-group">
+              <button class="create" @click="unpause">{{ tileLeft === 10000 ? 'Create' : 'Unpause' }}</button>
             </div>
           </div>
         </div>
@@ -97,10 +103,6 @@ export default {
   },
   data () {
     return {
-      isInstalled: undefined,
-      isLogIn: undefined,
-      isPurchaseBtn: undefined,
-      isMainnet: undefined,
       currentPrice: '.00000',
       lastPrice: '.00000',
       tileLeft: '10,000',
@@ -109,38 +111,48 @@ export default {
       increaseRate: 0.001011,
       inTransaction: false,
       purchasedCount: 1,
+      isInstalled: undefined,
+      isLogIn: undefined,
+      isPurchaseBtn: undefined,
+      isMainnet: undefined,
+      isPaused: undefined,
+      isSaleStarted: undefined,
+      isSaleEnded: undefined,
+      isBulkAvailable: undefined
     }
   },
   methods: {
     init () {
       const vm = this
-      // if (typeof web3 !== 'undefined') {
-      //   vm.web3 = new Web3(web3.currentProvider)
+      if (typeof web3 !== 'undefined') {
+        vm.web3 = new Web3(web3.currentProvider)
         vm.isInstalled = true
-      //   // console.log('currentProvider')
-      // } else {
-        vm.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'))
-      //   vm.isInstalled = false
-      //   // console.log('http://localhost:8545')
-      // }
+        // console.log('currentProvider')
+      } else {
+        // vm.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'))
+        vm.isInstalled = false
+        // console.log('http://localhost:8545')
+      }
 
       vm.startApp()
     },
     startApp () {
       const vm = this
       if (vm.isInstalled) {
-        const contractAddress = '0x633c9d79f92b35c4606492cedf92b9337ba7989d'
+        const contractAddress = '0xe08394fb0ed334751080d5c6127ec726bce6fecc'
         // '0x6b0949805cb2bddf91ea221695d7c949acb33357'
+
         vm.Contract = new vm.web3.eth.Contract(abi, contractAddress)
 
         vm.accountInterval = setInterval(function() {
           vm.getAccount()
-        }, 800)
+        }, 100)
+        // vm.accountInterval = setInterval(vm.getAccount, 100)
 
         vm.checkNet()
         vm.getSoldTileCount()
 
-        // // for temp
+        // // for event
         // const web3Infura = new Web3(new Web3.providers.WebsocketProvider("wss://mainnet.infura.io/ws"))
         // const contractEvents = new web3Infura.eth.Contract(abi, contractAddress)
 
@@ -182,19 +194,69 @@ export default {
             vm.isMainnet = false
         }
       })
+    }, 
+    getSoldTileCount () {
+      const vm = this
+      const threshold = ['1098', '1099', '1998', '1999', '9998', '9999']
+      const totalSupply = this.Contract.methods.totalSupply().call()
+
+      totalSupply.then(result => {
+        vm.tileLeft = 10000 - result
+        vm.isBulkAvailable = threshold.indexOf(result) === -1
+
+        if (result > 0) this.getPrice()
+      })
+
+      vm.checkPauseStatus()
+      vm.checkSaleStarted()
+      vm.checkSaleEnded()
+    },    
+    getPrice () {
+      const vm = this
+      const tilePrice = this.Contract.methods.tilePrice().call()
+
+      tilePrice.then(result => {
+        const price = vm.web3.utils.fromWei(result, 'ether')
+        vm.currentPrice = price.replace('0.', '.')
+        vm.lastPrice = price !== vm.startingPrice ? (price - vm.increaseRate).toString().replace('0.', '.') : '.00000'
+      })
+    },
+    unpause () {
+      const vm = this
+      const unpausePresale = vm.Contract.methods.unpausePresale().send({ from: vm.web3.eth.defaultAccount })
+
+      unpausePresale.on('receipt', result => {
+        if (vm.tileLeft === 10000) vm.mintGenesisTile()
+        vm.checkPauseStatus()
+        vm.checkSaleStarted()
+      })
+      .on('error', err => {
+        console.error(err)
+      })
+    },
+    mintGenesisTile () {
+      const vm = this
+      const mintGenesisByzantineTile = vm.Contract.methods.mintGenesisByzantineTile(vm.web3.eth.defaultAccount).send({ from: vm.web3.eth.defaultAccount, gas: 300000 })
+
+      mintGenesisByzantineTile.on('receipt', result => {
+        vm.getSoldTileCount()
+      })
+      .on('error', err => {
+        console.error(err)
+      })
     },
     buyTile () {
       const vm = this
       vm.inTransaction = true
+      vm.purchasedCount = 1
 
       const purchaseTile = vm.Contract.methods.purchaseTile().send({ 
         from: vm.web3.eth.defaultAccount, 
-        gas: 300000 ,
+        gas: 300000,
         value: vm.web3.utils.toWei(vm.currentPrice)
       })
 
       purchaseTile.on('receipt', result => {
-        console.log(result)
         vm.getSoldTileCount()
         vm.inTransaction = false
       })
@@ -205,15 +267,15 @@ export default {
     bulkBuyTile () {
       const vm = this
       vm.inTransaction = true
+      vm.purchasedCount = vm.bulkQuantity
 
-      const purchaseTile = vm.Contract.methods.purchaseTile().send({ 
+      const purchaseTile = vm.Contract.methods.bulkPurchaseTile().send({ 
         from: vm.web3.eth.defaultAccount, 
-        gas: 300000 ,
-        value: vm.web3.utils.toWei(vm.currentPrice)
+        gas: 300000,
+        value: vm.web3.utils.toWei(vm.currentPrice) * vm.bulkQuantity
       })
 
       purchaseTile.on('receipt', result => {
-        console.log(result)
         vm.getSoldTileCount()
         vm.inTransaction = false
       })
@@ -221,49 +283,22 @@ export default {
         console.error(err)
       })
     },
-    getPrice () {
+    checkPauseStatus () {
       const vm = this
-      const tilePrice = this.Contract.methods.tilePrice().call()
-
-      tilePrice.then(result => {
-        const price = vm.web3.utils.fromWei(result, 'ether')
-        vm.currentPrice = price.replace('0.', '.')
-        console.log(vm.tileLeft)
-        vm.lastPrice = price !== vm.startingPrice ? (price - vm.increaseRate).toString().replace('0.', '.') : '.00000'
+      vm.Contract.methods.pausedPresale().call().then(result => {
+        vm.isPaused = result
       })
     },
-    getSoldTileCount () {
+    checkSaleStarted () {
       const vm = this
-      const totalSupply = this.Contract.methods.totalSupply().call()
-
-      totalSupply.then(result => {
-        vm.tileLeft = 10000 - result
-        if (result > 0) this.getPrice()
+      vm.Contract.methods.byzantineSaleStarted().call().then(result => {
+        vm.isSaleStarted = result
       })
     },
-    unpause () {
+    checkSaleEnded () {
       const vm = this
-      const unpausePresale = vm.Contract.methods.unpausePresale().send({ from: vm.web3.eth.defaultAccount })
-
-      unpausePresale.on('receipt', result => {
-        vm.mintGenesisTile()
-        console.log('mintGenesisTile', result)
-      })
-      .on('error', err => {
-        console.error(err)
-      })
-    },
-    mintGenesisTile () {
-      const vm = this
-      console.log(vm.web3.eth.defaultAccount)
-      const mintGenesisByzantineTile = vm.Contract.methods.mintGenesisByzantineTile(vm.web3.eth.defaultAccount).send({ from: vm.web3.eth.defaultAccount, gas: 300000 })
-
-      mintGenesisByzantineTile.on('receipt', result => {
-        console.log(result)
-        vm.getSoldTileCount()
-      })
-      .on('error', err => {
-        console.error(err)
+      vm.Contract.methods.byzantineSaleEnded().call().then(result => {
+        vm.isSaleEnded = result
       })
     }
   },
@@ -440,7 +475,6 @@ export default {
   letter-spacing: 2px;
   cursor: pointer;
 }
-.reserved-buy,
 .buy3 {
   margin-left: 20px;
 }
