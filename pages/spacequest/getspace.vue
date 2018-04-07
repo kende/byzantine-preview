@@ -1,5 +1,5 @@
 <template>
-  <div class="get-space" v-if="isInstalled && isLogIn && isMainnet">
+  <div class="get-space" v-if="true"><!-- isInstalled && isLogIn && isMainnet -->
     <header class="page-header">
       <Navbar />
     </header>
@@ -12,8 +12,8 @@
           <div class="tiles-left">{{ tileLeft.toLocaleString() }} tiles left</div>
           <div class="last-price">LAST TILE PRICE: {{ lastPrice }} ETH</div>
           <div class="current-price">CURRENT PRICE: <span>{{ currentPrice }} ETH</span></div>
-          <div v-if="isPaused === false && isSaleEnded === false">
-            <div v-if="isSaleStarted">
+          <div v-if="isSaleStarted && isPaused === false && isSaleEnded === false">
+            <!-- <div v-if="isSaleStarted"> -->
               <div class="button-group" v-if="!inTransaction">
                 <button class="buy1" @click="buyTile">BUY 1</button>
                 <button class="buy3" @click="bulkBuyTile" v-if="isBulkAvailable">BUY 3</button>
@@ -21,16 +21,16 @@
               <div class="in-transaction" v-else>
                 <div class="loading-icon" v-bind:key="n" v-for="n in purchasedCount"><img src="~/assets/loading-icon.png"></div>
               </div>
-            </div>
-            <div class="button-group" v-else>
-              <button class="reserved-buy" @click="mintGenesisTile" v-if="tileLeft !== 10000 ">Buy</button>
-            </div>
+            <!-- </div> -->
+            <!-- <div class="button-group" v-else>
+              <button class="reserved-buy" @click="mintGenesisTile">Buy</button>
+            </div> -->
           </div>
-          <div v-else-if="isSaleEnded === false">
+          <!-- <div v-else-if="isSaleEnded === false">
             <div class="button-group">
               <button class="create" @click="unpause">{{ tileLeft === 10000 ? 'Create' : 'Unpause' }}</button>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
 
@@ -124,22 +124,22 @@ export default {
   methods: {
     init () {
       const vm = this
-      if (typeof web3 !== 'undefined') {
-        vm.web3 = new Web3(web3.currentProvider)
-        vm.isInstalled = true
-        // console.log('currentProvider')
-      } else {
-        // vm.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'))
-        vm.isInstalled = false
-        // console.log('http://localhost:8545')
-      }
+      // if (typeof web3 !== 'undefined') {
+      //   vm.web3 = new Web3(web3.currentProvider)
+      //   vm.isInstalled = true
+      //   // console.log('currentProvider')
+      // } else {
+        vm.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'))
+      //   vm.isInstalled = false
+      //   // console.log('http://localhost:8545')
+      // }
 
       vm.startApp()
     },
     startApp () {
       const vm = this
       if (vm.isInstalled) {
-        const contractAddress = '0xe8a3da97393ab9b9f3aa1ef2a57a6cfbced0b7ad'
+        const contractAddress = '0xac4861ede71265507d17ef0a116ccb9b91ac12d5'
         // '0xe8a3da97393ab9b9f3aa1ef2a57a6cfbced0b7ad'
 
         vm.Contract = new vm.web3.eth.Contract(abi, contractAddress)
@@ -203,6 +203,7 @@ export default {
       totalSupply.then(result => {
         vm.tileLeft = 10000 - result
         vm.isBulkAvailable = threshold.indexOf(result) === -1
+        console.log(result)
 
         if (result > 0) this.getPrice()
       })
@@ -221,30 +222,33 @@ export default {
         vm.lastPrice = price !== vm.startingPrice ? (price - vm.increaseRate).toString().replace('0.', '.') : '.00000'
       })
     },
-    unpause () {
-      const vm = this
-      const unpausePresale = vm.Contract.methods.unpausePresale().send({ from: vm.web3.eth.defaultAccount })
+    // unpause () {
+    //   const vm = this
+    //   const unpausePresale = vm.Contract.methods.unpausePresale().send({ from: vm.web3.eth.defaultAccount })
 
-      unpausePresale.on('receipt', result => {
-        if (vm.tileLeft === 10000) vm.mintGenesisTile()
-        vm.checkPauseStatus()
-        vm.checkSaleStarted()
-      })
-      .on('error', err => {
-        console.error(err)
-      })
-    },
-    mintGenesisTile () {
-      const vm = this
-      const mintGenesisByzantineTile = vm.Contract.methods.mintGenesisByzantineTile(vm.web3.eth.defaultAccount).send({ from: vm.web3.eth.defaultAccount, gas: 300000 })
+    //   unpausePresale.on('receipt', result => {
+    //     if (vm.tileLeft === 10000) vm.mintGenesisTile()
+    //     vm.checkPauseStatus()
+    //     vm.checkSaleStarted()
+    //   })
+    //   .on('error', err => {
+    //     console.error(err)
+    //   })
+    // },
+    // mintGenesisTile () {
+    //   const vm = this
+    //   const mintGenesisByzantineTile = vm.Contract.methods.mintGenesisByzantineTile(vm.web3.eth.defaultAccount).send({ 
+    //     from: vm.web3.eth.defaultAccount, 
+    //     // gas: 30000 
+    //   })
 
-      mintGenesisByzantineTile.on('receipt', result => {
-        vm.getSoldTileCount()
-      })
-      .on('error', err => {
-        console.error(err)
-      })
-    },
+    //   mintGenesisByzantineTile.on('receipt', result => {
+    //     vm.getSoldTileCount()
+    //   })
+    //   .on('error', err => {
+    //     console.error(err)
+    //   })
+    // },
     buyTile () {
       const vm = this
       vm.inTransaction = true
@@ -261,6 +265,7 @@ export default {
         vm.inTransaction = false
       })
       .on('error', err => {
+        vm.inTransaction = false
         console.error(err)
       })
     },
@@ -280,6 +285,7 @@ export default {
         vm.inTransaction = false
       })
       .on('error', err => {
+        vm.inTransaction = false
         console.error(err)
       })
     },
@@ -287,18 +293,21 @@ export default {
       const vm = this
       vm.Contract.methods.pausedPresale().call().then(result => {
         vm.isPaused = result
+        console.log('isPaused', vm.isPaused)
       })
     },
     checkSaleStarted () {
       const vm = this
       vm.Contract.methods.byzantineSaleStarted().call().then(result => {
         vm.isSaleStarted = result
+        console.log('isSaleStarted',vm.isSaleStarted)
       })
     },
     checkSaleEnded () {
       const vm = this
       vm.Contract.methods.byzantineSaleEnded().call().then(result => {
         vm.isSaleEnded = result
+        console.log('isSaleEnded',vm.isSaleEnded)
       })
     }
   },
