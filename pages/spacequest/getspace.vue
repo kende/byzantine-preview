@@ -12,6 +12,7 @@
           <div class="tiles-left">{{ tileLeft.toLocaleString() }} tiles left</div>
           <div class="last-price">LAST TILE PRICE: {{ lastPrice }} ETH</div>
           <div class="current-price">CURRENT PRICE: <span>{{ currentPrice }} ETH</span></div>
+          <div class="owner-count">My tiles: {{ownerTileCount}}</div>
           <div v-if="isSaleStarted && isPaused === false && isSaleEnded === false">
             <!-- <div v-if="isSaleStarted"> -->
               <div class="button-group" v-if="!inTransaction">
@@ -111,6 +112,7 @@ export default {
       increaseRate: 0.001011,
       inTransaction: false,
       purchasedCount: 1,
+      ownerTileCount: 0,
       isInstalled: undefined,
       isLogIn: undefined,
       isPurchaseBtn: undefined,
@@ -139,8 +141,7 @@ export default {
     startApp () {
       const vm = this
       if (vm.isInstalled) {
-        const contractAddress = '0xac4861ede71265507d17ef0a116ccb9b91ac12d5'
-        // '0xe8a3da97393ab9b9f3aa1ef2a57a6cfbced0b7ad'
+        const contractAddress = '0xe6d8709a5071cc661dfbae6ee25cbe7ea940a772'
 
         vm.Contract = new vm.web3.eth.Contract(abi, contractAddress)
 
@@ -176,7 +177,10 @@ export default {
           vm.isLogIn = false
         } else {
           vm.isLogIn = true
-          if (vm.web3.eth.defaultAccount !== account[0]) vm.web3.eth.defaultAccount = account[0]
+          if (vm.web3.eth.defaultAccount !== account[0]) {
+            vm.web3.eth.defaultAccount = account[0]
+            vm.getTokenCount(account[0])
+          }
         }
       })
     },
@@ -222,6 +226,13 @@ export default {
         vm.lastPrice = price !== vm.startingPrice ? (price - vm.increaseRate).toString().replace('0.', '.') : '.00000'
       })
     },
+    getTokenCount (address) {
+      const vm = this
+      const balance = vm.Contract.methods.balanceOf(address).call()
+      balance.then(result => {
+        vm.ownerTileCount = result
+      })
+    },
     // unpause () {
     //   const vm = this
     //   const unpausePresale = vm.Contract.methods.unpausePresale().send({ from: vm.web3.eth.defaultAccount })
@@ -263,6 +274,7 @@ export default {
       purchaseTile.on('receipt', result => {
         vm.getSoldTileCount()
         vm.inTransaction = false
+        vm.getTokenCount(vm.web3.eth.defaultAccount)
       })
       .on('error', err => {
         vm.inTransaction = false
@@ -283,6 +295,7 @@ export default {
       purchaseTile.on('receipt', result => {
         vm.getSoldTileCount()
         vm.inTransaction = false
+        vm.getTokenCount(vm.web3.eth.defaultAccount)
       })
       .on('error', err => {
         vm.inTransaction = false
@@ -293,21 +306,21 @@ export default {
       const vm = this
       vm.Contract.methods.pausedPresale().call().then(result => {
         vm.isPaused = result
-        console.log('isPaused', vm.isPaused)
+        // console.log('isPaused', vm.isPaused)
       })
     },
     checkSaleStarted () {
       const vm = this
       vm.Contract.methods.byzantineSaleStarted().call().then(result => {
         vm.isSaleStarted = result
-        console.log('isSaleStarted',vm.isSaleStarted)
+        // console.log('isSaleStarted',vm.isSaleStarted)
       })
     },
     checkSaleEnded () {
       const vm = this
       vm.Contract.methods.byzantineSaleEnded().call().then(result => {
         vm.isSaleEnded = result
-        console.log('isSaleEnded',vm.isSaleEnded)
+        // console.log('isSaleEnded',vm.isSaleEnded)
       })
     }
   },
@@ -457,6 +470,9 @@ export default {
   font-size: .8em;
   font-weight: 600;
   color: #a5a5a5;
+}
+.owner-count {
+  text-transform: uppercase;
 }
 
 .content-wrapper {
