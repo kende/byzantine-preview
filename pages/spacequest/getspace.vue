@@ -1,5 +1,5 @@
 <template>
-  <div class="get-space" v-if="true"><!-- isInstalled && isLogIn && isMainnet -->
+  <div class="get-space" v-if="isInstalled && isLogIn && isMainnet">
     <header class="page-header">
       <Navbar />
     </header>
