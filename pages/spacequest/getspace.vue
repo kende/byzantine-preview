@@ -126,22 +126,22 @@ export default {
   methods: {
     init () {
       const vm = this
-      // if (typeof web3 !== 'undefined') {
-      //   vm.web3 = new Web3(web3.currentProvider)
-      //   vm.isInstalled = true
-      //   // console.log('currentProvider')
-      // } else {
-        vm.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'))
-      //   vm.isInstalled = false
-      //   // console.log('http://localhost:8545')
-      // }
+      if (typeof web3 !== 'undefined') {
+        vm.web3 = new Web3(web3.currentProvider)
+        vm.isInstalled = true
+        // console.log('currentProvider')
+      } else {
+        // vm.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'))
+        vm.isInstalled = false
+        // console.log('http://localhost:8545')
+      }
 
       vm.startApp()
     },
     startApp () {
       const vm = this
       if (vm.isInstalled) {
-        const contractAddress = '0xe6d8709a5071cc661dfbae6ee25cbe7ea940a772'
+        const contractAddress = '0xbe725a7978acd8ddcaab9888df67b597b2a0032b'
 
         vm.Contract = new vm.web3.eth.Contract(abi, contractAddress)
 
@@ -191,6 +191,7 @@ export default {
       net.then(netId => {
         switch (netId) {
           case 3:
+          case 4:
           case 1:
             vm.isMainnet = true
             break
