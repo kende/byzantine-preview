@@ -236,7 +236,7 @@ export default {
       tilePrice.then(result => {
         const price = vm.web3.utils.fromWei(result, 'ether')
         vm.currentPrice = price.replace('0.', '.')
-        vm.lastPrice = price !== vm.startingPrice ? (price - vm.increaseRate).toString().replace('0.', '.') : '.00000'
+        vm.lastPrice = price !== vm.startingPrice ? (price - vm.increaseRate).toFixed(6).toString().replace('0.', '.') : '.00000'
       })
     },
     getTokenCount (address) {
