@@ -40,7 +40,7 @@
         <div class="detail-items">
           <div class="detail-card">
             <div class="detail-icon"><img src="~assets/arrow-icon.png" alt="arrow icon"></div>
-            <p class="detail-text">For each purchase, the price increases for the next tile by .0001 ETH.</p>
+            <p class="detail-text">For each purchase, the price increases for the next tile by .001011 ETH.</p>
           </div>
           <div class="detail-card">
             <div class="detail-icon"><img src="~assets/bundle-icon.png" alt="bundle icon"></div>
@@ -49,11 +49,11 @@
           <div class="detail-card">
             <div class="detail-icon"><img src="~assets/person-icon.png" alt="person icon"></div>
             <p class="detail-text">Share with your friends to complete the quest!</p>
-            <div class="social-media">
-              <div class="social-icon"><!-- <img src="~assets/facebook-icon.png" alt=""> --></div>
-              <div class="social-icon"><!-- <img src="~assets/facebook-icon.png" alt=""> --></div>
-              <div class="social-icon"><!-- <img src="~assets/facebook-icon.png" alt=""> --></div>
-            </div>
+            <!-- <div class="social-media">
+              <div class="social-icon"><img src="~assets/facebook-icon.png" alt=""></div>
+              <div class="social-icon"><img src="~assets/facebook-icon.png" alt=""></div>
+              <div class="social-icon"><img src="~assets/facebook-icon.png" alt=""></div>
+            </div> -->
           </div>
         </div>
       </div>
