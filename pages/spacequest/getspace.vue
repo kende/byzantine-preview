@@ -21,6 +21,7 @@
               </div>
               <div class="in-transaction" v-else>
                 <div class="loading-icon" v-bind:key="n" v-for="n in purchasedCount"><img src="~/assets/loading-icon.png"></div>
+                <div class="transaction-text" v-if="isProcessing">Transaction in progress</div>
               </div>
             <!-- </div> -->
             <!-- <div class="button-group" v-else>
@@ -125,6 +126,7 @@ export default {
       startingPrice: 0.021111,
       increaseRate: 0.001011,
       inTransaction: false,
+      isProcessing: false,
       purchasedCount: 1,
       ownerTileCount: 0,
       isInstalled: undefined,
@@ -284,13 +286,18 @@ export default {
         value: vm.web3.utils.toWei(vm.currentPrice)
       })
 
-      purchaseTile.on('receipt', result => {
-        vm.getSoldTileCount()
+      purchaseTile.on('transactionHash', transactionHash => {
+        vm.isProcessing = true
+      })
+      .on('receipt', result => {
         vm.inTransaction = false
+        vm.isProcessing = false
+        vm.getSoldTileCount()
         vm.getTokenCount(vm.web3.eth.defaultAccount)
       })
       .on('error', err => {
         vm.inTransaction = false
+        vm.isProcessing = false
         console.error(err)
       })
     },
@@ -305,13 +312,18 @@ export default {
         value: vm.web3.utils.toWei(vm.currentPrice) * vm.bulkQuantity
       })
 
-      purchaseTile.on('receipt', result => {
-        vm.getSoldTileCount()
+      purchaseTile.on('transactionHash', transactionHash => {
+        vm.isProcessing = true
+      })
+      .on('receipt', result => {
         vm.inTransaction = false
+        vm.isProcessing = false
+        vm.getSoldTileCount()
         vm.getTokenCount(vm.web3.eth.defaultAccount)
       })
       .on('error', err => {
         vm.inTransaction = false
+        vm.isProcessing = false
         console.error(err)
       })
     },
@@ -578,6 +590,7 @@ export default {
 
 .in-transaction {
   display: flex;
+  align-items: center;
 }
 .loading-icon {
   animation: rotate 2s infinite;
@@ -590,6 +603,11 @@ export default {
 }
 .loading-icon img {
   height: 60px;
+}
+.transaction-text {
+  margin-left: 10px;
+  font-size: .8em;
+  color: #616161;
 }
 
 @keyframes rotate {
