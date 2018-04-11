@@ -92,7 +92,7 @@
 </template>
 
 <script>
-import abi from '~/static/ABI/ByzantineABI.json'
+import ByzantineContractABI from '~/static/ABI/ByzantineContractABI.json'
 import Navbar from '~/components/Navbar.vue'
 import Footer from '~/components/Footer.vue'
 import Web3 from 'web3'
@@ -141,9 +141,9 @@ export default {
     startApp () {
       const vm = this
       if (vm.isInstalled) {
-        const contractAddress = '0xbe725a7978acd8ddcaab9888df67b597b2a0032b'
+        const contractAddress = '0xb9f0e42d13e1c4da786e5af83e4c6ea3ab5210e8'
 
-        vm.Contract = new vm.web3.eth.Contract(abi, contractAddress)
+        vm.Contract = new vm.web3.eth.Contract(ByzantineContractABI, contractAddress)
 
         vm.accountInterval = setInterval(function() {
           vm.getAccount()
@@ -190,8 +190,6 @@ export default {
 
       net.then(netId => {
         switch (netId) {
-          case 3:
-          case 4:
           case 1:
             vm.isMainnet = true
             break
