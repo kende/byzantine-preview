@@ -2,9 +2,9 @@
   <nav class="navbar">
     <div class="nav-item"><a href="http://byzantine.network/"><img class="logo" src="../assets/Byzantine-logo-yellow.png" alt="Byzantine logo"></a></div>
     <div class="item-group">
-      <!-- <div class="nav-item" v-if="currPage && currPage !== 'spacequest'"><nuxt-link to="/spacequest">HOME</nuxt-link></div> -->
-      <!-- <div class="nav-item" v-if="currPage && currPage !== 'start'"><nuxt-link to="/spacequest/start">START QUEST</nuxt-link></div> -->
-      <!-- <div class="nav-item" v-if="currPage && currPage !== 'getspace'"><nuxt-link to="/spacequest/getspace">GET SPACE</nuxt-link></div> -->
+      <div class="nav-item" v-if="currPage && currPage !== 'spacequest'"><nuxt-link to="/spacequest">HOME</nuxt-link></div>
+      <div class="nav-item" v-if="currPage && currPage !== 'start'"><nuxt-link to="/spacequest/start">START QUEST</nuxt-link></div>
+      <div class="nav-item" v-if="currPage && currPage !== 'getspace'"><nuxt-link to="/spacequest/getspace">GET SPACE</nuxt-link></div>
     </div>
   </nav>
 </template>
@@ -24,12 +24,14 @@ export default {
 
 <style scoped>
 .navbar {
+  position: relative;
   display: flex;
   justify-content: space-between;
   top: 0;
   padding:  0 24px;
   height: 10vh;
   line-height: 10vh;
+  z-index: 2000;
 }
 .navbar a {
   color: #e0e0e0;
