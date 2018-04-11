@@ -16,7 +16,7 @@
     <ul class="answer-list">
       <li class="answer-item">- Once you have Metamask and Ether in your wallet, go to <a href="../getspace">Get Space</a> and you should see the option to buy 1 or 3 tiles.</li>
       <li class="answer-item">- The price will only increment for each purchase, not tile, so if you buy in sets of 3, the price for all three tiles will be the same.</li>
-      <li class="answer-item">- Each tile purchased increments the price by .001011 ETH.</li>
+      <li class="answer-item">- Each purchase increments the price by .001011 ETH.</li>
       <li class="answer-item">- For each tile purchased, .02 ETH will be used to build a mesh network infrastructure.</li>
     </ul>
   </div>

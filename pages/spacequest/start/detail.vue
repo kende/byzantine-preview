@@ -1,7 +1,7 @@
 <template>
   <div class="text">
     <h4 class="section-subtitle">The Details</h4>
-    <p class="answer">Each tile is tied to a unique ERC-721 token, a crypto asset. Individually, a tile has its own art, but when put together, they create a giant multiverse piece. There will be a total of 10,000 tiles created, and the tiles will only be revealed once all of them have been sold.</p>
+    <p class="answer">Each tile is tied to a unique ERC-721 token, a crypto asset. Individually, a tile has its own art, but when put together, they create a giant multiverse piece. There will be a total of 10,000 tiles created, and the tiles will only be revealed 30 days after all of them have been sold.</p>
     <p class="answer">The first tiles will start off low in price and will increase as each additional tile is purchased. For each tile purchased, .02 ETH will be used to build a mesh network infrastructure – fighting for Net Neutrality, starting in the neighborhood of Bushwick in Brooklyn, NY.</p>
   </div>
 </template>
