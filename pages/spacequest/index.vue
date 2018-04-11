@@ -46,29 +46,30 @@
           <!-- <div class="purchase-text">Launching March 21, 2018</div> -->
           <div class="purchase-text purchase-pink">Space Quest Badge</div>
           <div class="purchase-text"><small class="purchase-small">Limited 10K Token release</small></div>
-          <div class="subscription-form">
+          <nuxt-link class="purchase-btn" to="/spacequest/getspace"><button>Buy</button></nuxt-link>
+          <!-- <div class="subscription-form">
             <div class="subscription-group">
               <input type="email" placeholder="email..." @keypress='emailChange' v-model='email' required>
               <button @click='submit'>Subscribe</button>
             </div>
             <div class="error-msg">{{errorMsg}}</div>
-          </div>
+          </div> -->
         </section>
         <Footer />
       </div>
     </div>        
-    <div class='success-popup'>
+    <!-- <div class='success-popup'>
       <div class='popup-body'>
         <div class='popup-title'>You've successfully subscribed!</div>
         <div class='popup-text'>Keep an eye out for the upcoming token release ✨</div>
         <button class='close-btn' @click='closePopup'>OK</button>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
-import axios from 'axios'
+// import axios from 'axios'
 import Navbar from '~/components/Navbar.vue'
 import Footer from '~/components/Footer.vue'
 
@@ -77,53 +78,53 @@ export default {
     Navbar,
     Footer
   },
-  data() {
-    return {
-      email: '',
-      errorMsg: '',
-    }
-  },
-  methods: {
-    closePopup () {
-      const el = document.querySelector('.success-popup')
-      el.className = 'success-popup'
-    },
-    emailChange () {
-      this.errorMsg = !this.validEmail(this.email) ? 'Valid email required.' : ''
-    },
-    validEmail:function(email) {
-      const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      return re.test(email)
-    },
-    addEmailToSubscriptionList () {
-      const el = document.querySelector('.success-popup')
-      console.log(this.email)
-      axios({
-        url: "https://api.node.nyc/api/email-subscrption/space-quest",
-        // url: "http://localhost:9090/api/email-subscrption/space-quest",
-        method: 'post',
-        data: {
-          "email": this.email
-        }
-      })
-      .then(function(response) {
-        if (response) {
-          console.log(response)
-          el.className += ' active'
-        }
-      })
-      .then(function(error) {
-        if (error) console.log(error)
-      })
-    },
-    submit () {
-      if (this.validEmail(this.email)) {
-        this.addEmailToSubscriptionList()
-      } else {
-        console.log('Valid email required.')
-      }
-    }
-  }
+  // data() {
+  //   return {
+      // email: '',
+      // errorMsg: '',
+  //   }
+  // },
+  // methods: {
+    // closePopup () {
+    //   const el = document.querySelector('.success-popup')
+    //   el.className = 'success-popup'
+    // },
+    // emailChange () {
+    //   this.errorMsg = !this.validEmail(this.email) ? 'Valid email required.' : ''
+    // },
+    // validEmail:function(email) {
+    //   const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    //   return re.test(email)
+    // },
+    // addEmailToSubscriptionList () {
+    //   const el = document.querySelector('.success-popup')
+    //   console.log(this.email)
+    //   axios({
+    //     url: "https://api.node.nyc/api/email-subscrption/space-quest",
+    //     // url: "http://localhost:9090/api/email-subscrption/space-quest",
+    //     method: 'post',
+    //     data: {
+    //       "email": this.email
+    //     }
+    //   })
+    //   .then(function(response) {
+    //     if (response) {
+    //       console.log(response)
+    //       el.className += ' active'
+    //     }
+    //   })
+    //   .then(function(error) {
+    //     if (error) console.log(error)
+    //   })
+    // },
+    // submit () {
+    //   if (this.validEmail(this.email)) {
+    //     this.addEmailToSubscriptionList()
+    //   } else {
+    //     console.log('Valid email required.')
+    //   }
+    // }
+  // }
 }
 </script>
 
@@ -394,6 +395,20 @@ export default {
   color: #fff;
   letter-spacing: 4px;
   outline: none;
+}
+
+.purchase-btn button {
+  margin: 40px 0 80px;
+  height: 50px;
+  min-width: 200px;
+  background: #f86bcf;
+  border: none;
+  font-family: "arame-regular", sans-serif;
+  font-size: 1.2em;
+  line-height: 50px;
+  color: #fff;
+  letter-spacing: 2px;
+  cursor: pointer;
 }
 
 @media (max-width: 960px) {
