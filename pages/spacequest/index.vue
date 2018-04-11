@@ -78,6 +78,20 @@ export default {
     Navbar,
     Footer
   },
+  head () {
+    return {
+      meta: [
+        { hid: 'og_title', property: 'og:title', content: 'Byzantine Space Quest' },
+        { hid: 'og_description', property: 'og:description', content: 'An interactive art game exploring space, time, and community.' },
+        { hid: 'og_image', property: 'og:image', content: require('~/assets/space_quest_thumbnail.png') },
+        { hid: 'og_url', property: 'og:url', content: 'https://byzantine.network/spacequest/' },
+        { hid: 'twitter_title', property: 'twitter:title', content: 'Byzantine Space Quest' },
+        { hid: 'twitter_description', property: 'twitter:description', content: 'An interactive art game exploring space, time, and community.' },
+        { hid: 'twitter_image', property: 'twitter:image', content: require('~/assets/space_quest_thumbnail.png') },
+        { hid: 'twitter_url', property: 'twitter:url', content: 'https://byzantine.network/spacequest/' }
+      ]
+    }
+  }
   // data() {
   //   return {
       // email: '',
