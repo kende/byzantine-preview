@@ -21,7 +21,7 @@
               </div>
               <div class="in-transaction" v-else>
                 <div class="loading-icon" v-bind:key="n" v-for="n in purchasedCount"><img src="~/assets/loading-icon.png"></div>
-                <div class="transaction-text" v-if="isProcessing">Transaction in progress</div>
+                <div class="transaction-text" v-if="isProcessing"><a v-bind:href="transaction" target="_blank">Transaction</a> in progress</div>
               </div>
             <!-- </div> -->
             <!-- <div class="button-group" v-else>
@@ -67,6 +67,7 @@
       <div class="not-install" v-if="isInstalled === false">
         <div class="alert-title">SET UP METAMASK</div>
         <div class="alert-subtitle"><a href="https://metamask.io/" target="_blank">download and install it here</a></div>
+        <img src="https://raw.githubusercontent.com/MetaMask/faq/master/images/download-metamask-dark.png" alt="MetaMask Logo">
       </div>
       <div class="not-login" v-else-if="isLogIn === false">
         <div class="alert-title">YOUR METAMASK IS LOCKED</div>
@@ -288,6 +289,7 @@ export default {
 
       purchaseTile.on('transactionHash', transactionHash => {
         vm.isProcessing = true
+        vm.transaction = 'https://etherscan.io/tx/' + transactionHash
       })
       .on('receipt', result => {
         vm.inTransaction = false
@@ -314,6 +316,7 @@ export default {
 
       purchaseTile.on('transactionHash', transactionHash => {
         vm.isProcessing = true
+        vm.transaction = 'https://etherscan.io/tx/' + transactionHash
       })
       .on('receipt', result => {
         vm.inTransaction = false
@@ -401,6 +404,15 @@ export default {
   text-align: center;
   height: calc(100vh - 147px);
 }
+.not-install {
+  margin: auto;
+  padding: 0 20px;
+  max-width: 800px;
+}
+.not-install img {
+  width: 100%;
+  height: auto;
+}
 
 .alert-title {
   flex: 0 0 auto;
@@ -412,6 +424,9 @@ export default {
   flex: 0 0 auto;
   padding-bottom: 50px;
   font-size: 20px;
+}
+.alert-subtitle a {
+  color: #fff;
 }
 .alert-img-wrapper {
   flex: 1 1 auto;
@@ -607,6 +622,9 @@ export default {
 .transaction-text {
   margin-left: 10px;
   font-size: .8em;
+  color: #616161;
+}
+.transaction-text a {
   color: #616161;
 }
 
