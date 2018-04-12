@@ -12,7 +12,7 @@
           <div class="tiles-left">{{ tileLeft.toLocaleString() }} tiles left</div>
           <div class="last-price">LAST TILE PRICE: {{ lastPrice }} ETH</div>
           <div class="current-price">CURRENT PRICE: <span>{{ currentPrice }} ETH</span></div>
-          <div class="owner-count">My tiles: {{ownerTileCount}}</div>
+          <div class="owner-count">My tiles: {{ownerTileCount}} <span class="message" v-bind:class="{'success': message === 'Success'}">{{ message }}</span></div>
           <div v-if="isSaleStarted && isPaused === false && isSaleEnded === false">
             <!-- <div v-if="isSaleStarted"> -->
               <div class="button-group" v-if="!inTransaction">
@@ -137,7 +137,8 @@ export default {
       isPaused: undefined,
       isSaleStarted: undefined,
       isSaleEnded: undefined,
-      isBulkAvailable: undefined
+      isBulkAvailable: undefined,
+      message: null
     }
   },
   methods: {
@@ -278,6 +279,7 @@ export default {
     // },
     buyTile () {
       const vm = this
+      vm.message = null
       vm.inTransaction = true
       vm.purchasedCount = 1
 
@@ -296,15 +298,18 @@ export default {
         vm.isProcessing = false
         vm.getSoldTileCount()
         vm.getTokenCount(vm.web3.eth.defaultAccount)
+        vm.message = result.status === '0x1' ? 'Success' : 'Fail'
       })
       .on('error', err => {
         vm.inTransaction = false
         vm.isProcessing = false
+        vm.message = 'Rejected'
         console.error(err)
       })
     },
     bulkBuyTile () {
       const vm = this
+      vm.message = null
       vm.inTransaction = true
       vm.purchasedCount = vm.bulkQuantity
 
@@ -323,10 +328,12 @@ export default {
         vm.isProcessing = false
         vm.getSoldTileCount()
         vm.getTokenCount(vm.web3.eth.defaultAccount)
+        vm.message = result.status === '0x1' ? 'Success' : 'Fail'
       })
       .on('error', err => {
         vm.inTransaction = false
         vm.isProcessing = false
+        vm.message = 'Rejected'
         console.error(err)
       })
     },
@@ -512,6 +519,7 @@ export default {
   color: #a5a5a5;
 }
 .owner-count {
+  position: relative;
   text-transform: uppercase;
 }
 
@@ -525,7 +533,7 @@ export default {
   line-height: 2em;
 }
 .button-group {
-  margin-top: 20px;
+  margin-top: 30px;
 }
 .create,
 .reserved-buy,
@@ -604,6 +612,7 @@ export default {
 }
 
 .in-transaction {
+  margin-top: 20px;
   display: flex;
   align-items: center;
 }
@@ -626,6 +635,29 @@ export default {
 }
 .transaction-text a {
   color: #616161;
+}
+
+.message {
+  position: absolute;
+  top: .25em;
+  margin-left: 10px;
+  font-size: .7em;
+  color: rgb(255, 0, 0);
+  text-transform: capitalize;
+  line-height: 1em;
+}
+.message:before {
+  content: '(';
+}
+.message:after {
+  content: ')';
+}
+.message:empty:before,
+.message:empty:after {
+  content: '';
+}
+.success {
+  color: rgb(0, 128, 0);
 }
 
 @keyframes rotate {
