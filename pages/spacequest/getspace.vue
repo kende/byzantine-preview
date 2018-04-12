@@ -12,7 +12,11 @@
           <div class="tiles-left">{{ tileLeft.toLocaleString() }} tiles left</div>
           <div class="last-price">LAST TILE PRICE: {{ lastPrice }} ETH</div>
           <div class="current-price">CURRENT PRICE: <span>{{ currentPrice }} ETH</span></div>
-          <div class="owner-count">My tiles: {{ownerTileCount}} <span class="message" v-bind:class="{'success': message === 'Success'}">{{ message }}</span></div>
+          <div class="owner-count">
+            My tiles: {{ownerTileCount}} 
+            <span class="message" v-if="message === 'Rejected'">{{ message }}</span>
+            <a class="message" v-bind:class="{'success': message === 'Success'}" v-bind:href="transaction" target="_blank" v-else>{{ message }}</a>
+          </div>
           <div v-if="isSaleStarted && isPaused === false && isSaleEnded === false">
             <!-- <div v-if="isSaleStarted"> -->
               <div class="button-group" v-if="!inTransaction">
@@ -138,7 +142,8 @@ export default {
       isSaleStarted: undefined,
       isSaleEnded: undefined,
       isBulkAvailable: undefined,
-      message: null
+      message: null,
+      transaction: null
     }
   },
   methods: {
