@@ -22,6 +22,7 @@
               <div class="button-group" v-if="!inTransaction">
                 <button class="buy1" @click="buyTile">BUY 1</button>
                 <button class="buy3" @click="bulkBuyTile" v-if="isBulkAvailable">BUY 3</button>
+                <button class="buy-larger" @click="togglePopup">WANT TO BUY A LARGER AMOUNT?</button>
               </div>
               <div class="in-transaction" v-else>
                 <div class="loading-icon" v-bind:key="n" v-for="n in purchasedCount"><img src="~/assets/loading-icon.png"></div>
@@ -61,6 +62,24 @@
             </div> -->
           </div>
         </div>
+      </div>
+    </div>
+    <div class="popup" v-if="isOpenPopup">
+      <div class="popup-body">
+        <div class="close-btn" @click="togglePopup"></div>
+        <div class="title">HOW MANY TILES DO YOU WANT TO PURCHASE?</div>
+        <div class="num-input"><input type="text" placeholder="number of tiles"></div>
+        <div class="estimated-nums">
+          <div class="plus-icon">+</div>
+          <div>0 ESTIMATED GAS(ETH)</div>
+          <div>0 ESTIMATED TILE COST(ETH)</div>
+          <hr>
+          <div>0 ESTIMATED TOTAL COST(ETH)</div>
+        </div>
+        <div class="button-group">
+          <button class="buy">BUY</button>
+          <button class="cancel" @click="togglePopup">CANCEL</button>
+        </div>    
       </div>
     </div>
     <div class="footer"><Footer /></div>
@@ -132,6 +151,7 @@ export default {
       increaseRate: 0.001011,
       inTransaction: false,
       isProcessing: false,
+      isOpenPopup: false,
       purchasedCount: 1,
       ownerTileCount: 0,
       isInstalled: undefined,
@@ -362,6 +382,9 @@ export default {
         vm.isSaleEnded = result
         // console.log('isSaleEnded',vm.isSaleEnded)
       })
+    },
+    togglePopup () {
+      this.isOpenPopup = !this.isOpenPopup
     }
   },
   mounted () {
@@ -543,7 +566,9 @@ export default {
 .create,
 .reserved-buy,
 .buy1,
-.buy3 {
+.buy3,
+.buy,
+.cancel {
   padding: .7em 2em;
   background: #f86bcf;
   border: none;
@@ -555,6 +580,24 @@ export default {
 }
 .buy3 {
   margin-left: 20px;
+}
+.buy-larger {
+  margin-top: 20px;
+  padding: 0 1.4em;
+  border: none;
+  font-family: "arame-regular", sans-serif;
+  font-size: .8em;
+  color: #f86bcf;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.buy,
+.cancel {
+  width: 160px;
+}
+.cancel {
+  margin-left: 10px;
+  background: #969696;
 }
 
 .detail {
@@ -664,6 +707,110 @@ export default {
 .success {
   color: rgb(0, 128, 0);
 }
+
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background: rgba(255, 255, 255, .5);
+  z-index: 5000;
+}
+.popup-body {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  padding: 60px 24px 40px;
+  width: 90%;
+  max-width: 600px;
+  background: #fff;
+  border: 4px solid #fce096;
+  text-align: center;
+  transform: translate(-50%, -50%);
+}
+.popup .title {
+  font-family: "arame-regular", sans-serif;
+  font-size: 1.4em;
+}
+.popup .num-input {
+  margin: 20px 0;
+}
+.popup .num-input input {
+  padding: 0 10px;
+  height: 40px;
+  width: 90%;
+  max-width: 240px;
+  border: 1px solid #616161;
+  font-family: "rational-light", sans-serif;
+  font-size: 1em;
+  text-align: center;
+}
+.num-input input::-webkit-input-placeholder {
+  font-family: "rational-light", sans-serif;
+  color: #ccc;
+}
+.num-input input::-moz-placeholder {
+  font-family: "rational-light", sans-serif;
+  color: #ccc;
+}
+.num-input input:-ms-input-placeholder {
+  font-family: "rational-light", sans-serif;
+  color: #ccc;
+}
+.num-input input:-moz-placeholder {
+  font-family: "rational-light", sans-serif;
+  color: #ccc;
+}
+.estimated-nums {
+  position: relative;
+  margin: 40px auto;
+  width: 100%;
+  max-width: 350px;
+  font-family: "arame-regular", sans-serif;
+  text-align: left;
+}
+.estimated-nums hr {
+  border-color: #616161;
+  border-top: none;
+}
+.estimated-nums div:not(.plus-icon) {
+  margin: 20px 0 20px 30%;
+  color: #aaa;
+}
+.plus-icon {
+  position: absolute;
+  left: 0;
+  top: 30%;
+  font-size: 1.4em;
+  color: #616161;
+}
+
+.close-btn {
+  position: absolute;
+  right: 14px;
+  top: 14px;
+  height: 20px;
+  width: 20px;
+  cursor: pointer;
+}
+.close-btn:before,
+.close-btn:after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  display: block;
+  border: 1px solid #616161;
+  width: 100%;
+}
+.close-btn:before {
+  transform: rotate(45deg);
+} 
+.close-btn:after {
+  transform: rotate(-45deg);
+}
+
 
 @keyframes rotate {
   0% {
