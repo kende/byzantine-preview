@@ -1,5 +1,5 @@
 <template>
-  <div class="get-space" v-if="isInstalled && isLogIn && isMainnet">
+  <div class="get-space" v-if="isInstalled && isLogIn && isMainnet && !isPurchasing">
     <header class="page-header">
       <Navbar />
     </header>
@@ -68,21 +68,50 @@
       <div class="popup-body">
         <div class="close-btn" @click="togglePopup"></div>
         <div class="title">HOW MANY TILES DO YOU WANT TO PURCHASE?</div>
-        <div class="num-input"><input type="text" placeholder="number of tiles"></div>
+        <div class="num-input"><input type="text" placeholder="number of tiles" v-model="bulkNumber" @keyup="calcEstimatedValue"></div>
         <div class="estimated-nums">
           <div class="plus-icon">+</div>
-          <div>0 ESTIMATED GAS(ETH)</div>
-          <div>0 ESTIMATED TILE COST(ETH)</div>
+          <div>{{ estimatedGas == 0 ? 0 : estimatedGas.toFixed(6) }} ESTIMATED GAS(ETH)</div>
+          <div>{{ estimatedCost == 0 ? 0 : estimatedCost.toFixed(6) }} ESTIMATED TILE COST(ETH)</div>
           <hr>
-          <div>0 ESTIMATED TOTAL COST(ETH)</div>
+          <div>{{ (estimatedGas + estimatedCost) == 0 ? 0 : (estimatedGas + estimatedCost).toFixed(6) }} ESTIMATED TOTAL COST(ETH)</div>
         </div>
         <div class="button-group">
-          <button class="buy">BUY</button>
+          <button class="buy" @click="buyLargeNumTiles">BUY</button>
           <button class="cancel" @click="togglePopup">CANCEL</button>
         </div>    
       </div>
     </div>
     <div class="footer"><Footer /></div>
+  </div>
+  <div class="bulkbuy-game" v-else-if="isPurchasing">
+    <div class="bulkbuy-header"><Navbar /></div>
+    <div class="bulkbuy-content">
+      <div class="title">CLICK SUBMIT TO CREATE YOUR STAR</div>
+      <div class="num">{{ processingNum }}/{{ bulkNumber }}</div>
+      <div class="icons-wrapper">
+        <div class="blackhole-wrapper">
+          <div class="black-hole" v-bind:class="{ 'white-bg': processingNum !== 0 }" v-bind:style="{ transform: 'scale(' + (processingNum / bulkNumber * 5 + 1) + ')', left: processingNum === 0 ? '10%' : processingNum / bulkNumber / 0.02 + '%' }">
+            <div class="completed-text" v-if="processingNum == bulkNumber">
+              <div>{{ completedNum }}/{{ bulkNumber }}<br>completed</div>
+              <div class="progressbar"><div class="progressbar-cover" v-bind:style="{ width: completedNum / bulkNumber * 100 + '%' }"></div></div>
+              <div class="back-btn" v-if="isBackBtn" @click="backToPurchasePage">back</div>
+            </div>
+          </div>
+        </div>
+        <div class="icons-group" v-bind:style="{ left: processingNum === 0 ? '30%' : processingNum / bulkNumber / 0.02 + '%', width: (processingNum / bulkNumber) === 1 ? 0 : (140 - processingNum / bulkNumber * 100) + '%' }">
+          <div class="image" style="transform: translateX(-40px)"><img src="~assets/icons/alien.png" alt="alien"></div>
+          <div class="image" style="transform: translateX(-80px)"><img src="~assets/icons/UFO.png" alt="UFO"></div>
+          <div class="image" style="transform: translateX(-120px)"><img src="~assets/icons/ethereum.png" alt="ethereum"></div>
+          <div class="image" style="transform: translateX(-160px)"><img src="~assets/icons/star.png" alt="star"></div>
+          <div class="image" style="transform: translateX(-200px)"><img src="~assets/icons/fighter.png" alt="fighter"></div>
+          <div class="image" style="transform: translateX(-240px)"><img src="~assets/icons/helmet.png" alt="helmet"></div>
+          <div class="image" style="transform: translateX(-280px)"><img src="~assets/icons/rocket.png" alt="rocket"></div>
+          <div class="image" style="transform: translateX(-320px)"><img src="~assets/icons/satellite.png" alt="satellite"></div>
+        </div>
+      </div>
+    </div>
+    <div class="bulkbuy-footer"><Footer /></div>
   </div>
   <div class="message-tab" v-else>
     <div class="alert-msg">
@@ -152,6 +181,10 @@ export default {
       inTransaction: false,
       isProcessing: false,
       isOpenPopup: false,
+      isPurchasing: false,
+      isBackBtn: false,
+      processingNum: 0,
+      completedNum: 0,
       purchasedCount: 1,
       ownerTileCount: 0,
       isInstalled: undefined,
@@ -163,7 +196,10 @@ export default {
       isSaleEnded: undefined,
       isBulkAvailable: undefined,
       message: null,
-      transaction: null
+      transaction: null,
+      bulkNumber: null,
+      estimatedGas: 0,
+      estimatedCost: 0
     }
   },
   methods: {
@@ -382,6 +418,83 @@ export default {
         vm.isSaleEnded = result
         // console.log('isSaleEnded',vm.isSaleEnded)
       })
+    },
+    calcEstimatedValue () {
+      const vm = this
+      const bulkNum = Number(vm.bulkNumber)
+      if ( Number(vm.bulkNumber) <= vm.tileLeft) {
+        const result = Math.floor(bulkNum / 3)
+        const remainder = bulkNum % 3
+        const currentPrice = Number(vm.currentPrice)
+
+        const increaseRate = Number(vm.increaseRate)
+
+        vm.estimatedGas = (Math.floor(bulkNum / 3) + remainder) * 0.0012
+        vm.estimatedCost = (currentPrice + (result - 1) / 2 * increaseRate) * result * vm.bulkQuantity + (currentPrice + (result + (remainder - 1) / 2) * increaseRate) * remainder
+      }
+    },
+    buyLargeNumTiles () {
+      const vm = this
+      vm.isPurchasing = true
+    
+      const bulkNum = Number(vm.bulkNumber)
+      let counter = 0
+      let result = Math.floor(bulkNum / 3)
+      let remainder = bulkNum % 3
+      let currentPrice = Number(vm.currentPrice)
+
+      while (result > 0) {
+        const purchaseTile = vm.Contract.methods.bulkPurchaseTile().send({ 
+          from: vm.web3.eth.defaultAccount, 
+          gas: 300000,
+          value: vm.web3.utils.toWei(currentPrice.toFixed(6).toString()) * vm.bulkQuantity
+        })
+
+        purchaseTile.on('transactionHash', transactionHash => {
+          vm.processingNum += vm.bulkQuantity
+        })
+        .on('receipt', result => {
+          vm.completedNum += result.status === '0x1' ? vm.bulkQuantity : 0
+          counter += vm.bulkQuantity
+          if (counter === bulkNum) {
+            vm.isBackBtn = true
+          }
+        })
+        .on('error', err => {
+          console.error(err)
+        })
+        currentPrice += vm.increaseRate
+        result--
+      }
+
+      while (remainder > 0) {
+        const purchaseTile = vm.Contract.methods.purchaseTile().send({ 
+          from: vm.web3.eth.defaultAccount, 
+          gas: 300000,
+          value: vm.web3.utils.toWei(currentPrice.toFixed(6).toString())
+        })
+
+        purchaseTile.on('transactionHash', transactionHash => {
+          vm.processingNum += 1
+        })
+        .on('receipt', result => {
+          vm.completedNum += result.status === '0x1' ? 1 : 0
+          counter += 1
+          if (counter === bulkNum) {
+            vm.isBackBtn = true
+          }
+        })
+        .on('error', err => {
+          console.error(err)
+        })
+        currentPrice += vm.increaseRate
+        remainder--
+      }
+    },
+    backToPurchasePage () {
+      this.isBackBtn = true
+      this.isPurchasing = false
+      this.togglePopup()
     },
     togglePopup () {
       this.isOpenPopup = !this.isOpenPopup
@@ -768,14 +881,14 @@ export default {
   width: 100%;
   max-width: 350px;
   font-family: "arame-regular", sans-serif;
-  text-align: left;
+  text-align: right;
 }
 .estimated-nums hr {
   border-color: #616161;
   border-top: none;
 }
 .estimated-nums div:not(.plus-icon) {
-  margin: 20px 0 20px 30%;
+  margin: 20px 0;
   color: #aaa;
 }
 .plus-icon {
@@ -811,6 +924,131 @@ export default {
   transform: rotate(-45deg);
 }
 
+.bulkbuy-game {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #1e226b;
+}
+.bulkbuy-game:before {
+  content: "";
+  top: 0;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-image: url('~assets/bk-stars-1.png'), url('~assets/bk-stars-2.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  opacity: 0.5;
+}
+
+.bulkbuy-header,
+.bulkbuy-footer {
+  flex: 0 0 auto;
+  position: relative;
+  z-index: 4;
+}
+
+.bulkbuy-content {
+  flex: 1 1 auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.bulkbuy-content .title {
+  padding: 40px 20px 20px;
+  font-family: "arame-regular", sans-serif;
+  font-size: 2.4em;
+  color: #fff;
+  text-align: center;
+  letter-spacing: .1em;
+}
+.bulkbuy-content .num {
+  font-family: "arame-regular", sans-serif;
+  font-size: 1.4em;
+  color: #fff;
+  text-align: center;
+}
+
+.icons-wrapper {
+  display: flex;
+  position: absolute;
+  top: 50%;
+  margin-top: -20px;
+  width: 100%;
+  z-index: 4;
+}
+.icons-group {
+  display: flex;
+  position: absolute;
+  left: 30%;
+  width: 50%;
+  transition: all 1s;
+}
+.icons-group .image {
+  flex: none;
+  margin-right: 12%;
+  height: 40px;
+  width: 40px;
+  background: #fff;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.black-hole {
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin-left: -20px;
+  height: 40px;
+  width: 40px;
+  background: #000;
+  border-radius: 50%;
+  box-shadow: 0 0 0 10px rgba(116, 227, 255, .8), 0 0 0 10px rgba(116, 227, 255, .8);
+  transition: all 1s;
+  z-index: 10;
+}
+.black-hole.white-bg {
+  background: #fff;
+  box-shadow: 0 0 2px 10px rgba(116, 227, 255, .4), 0 0 0 8px rgba(116, 227, 255, .2), 0 0 0 6px rgba(116, 227, 255, .4), 0 0 0 4px rgba(116, 227, 255, .5), 0 0 0 2px rgba(116, 227, 255, .6);
+}
+.completed-text {
+  padding-top: 28%;
+  font-family: "rational-light", sans-serif;
+  font-size: 3px;
+  text-align: center;
+}
+.progressbar {
+  position: relative;
+  margin: 2px auto;
+  height: 2px;
+  width: 80%;
+  background-color: #eee;
+  border-radius: 2px;
+  transform: scaleY(.5);
+}
+.progressbar-cover {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: #74e3ff;
+  border-radius: 2px;
+  transition: all 1s;
+}
+.icons-group .image img {
+  height: 40px;
+  width: 40px;
+  object-fit: contain;
+}
+
+.back-btn {
+  margin: -.5em auto;
+  font-size: 4em;
+  text-decoration: underline;
+  transform: scale(.2);
+  cursor: pointer;
+}
 
 @keyframes rotate {
   0% {
