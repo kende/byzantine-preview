@@ -87,7 +87,7 @@
   <div class="bulkbuy-game" v-else-if="isPurchasing">
     <div class="bulkbuy-header"><Navbar /></div>
     <div class="bulkbuy-content">
-      <div class="title">CLICK SUBMIT TO CREATE YOUR STAR</div>
+      <div class="title">CLICK SUBMIT IN WALLET POPUP TO CREATE YOUR STAR</div>
       <div class="num">{{ processingNum }}/{{ bulkNumber }}</div>
       <div class="icons-wrapper">
         <div class="blackhole-wrapper">
@@ -959,7 +959,7 @@ export default {
 .bulkbuy-content .title {
   padding: 40px 20px 20px;
   font-family: "arame-regular", sans-serif;
-  font-size: 2.4em;
+  font-size: 2em;
   color: #fff;
   text-align: center;
   letter-spacing: .1em;
