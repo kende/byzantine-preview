@@ -10,13 +10,13 @@
     <p class="answer">2. Send Ether to your wallet</p>
     <ul class="answer-list">
       <li class="answer-item">- If you’re a US citizen, you should be able to purchase Ether directly through Metamask.</li>
-      <li class="answer-item">- If you’re not a US citizen, you can purchase Ether from another exchange, like <a href="https://www.coinbase.com/">Coinbase</a>.</li>
+      <li class="answer-item">- If you’re not a US citizen, you can purchase Ether from another exchange, like <a href="https://www.coinbase.com/join/592f472f816b990267963e2b" target="_blank">Coinbase</a>.</li>
     </ul>
     <p class="answer">3. Buy tiles</p>
     <ul class="answer-list">
       <li class="answer-item">- Once you have Metamask and Ether in your wallet, go to <a href="../getspace">Get Space</a> and you should see the option to buy 1 or 3 tiles.</li>
       <li class="answer-item">- The price will only increment for each purchase, not tile, so if you buy in sets of 3, the price for all three tiles will be the same.</li>
-      <li class="answer-item">- Each tile purchased increments the price by .003 ETH.</li>
+      <li class="answer-item">- Each purchase increments the price by .001011 ETH.</li>
       <li class="answer-item">- For each tile purchased, .02 ETH will be used to build a mesh network infrastructure.</li>
     </ul>
   </div>

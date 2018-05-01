@@ -17,7 +17,7 @@
           <!-- <div class="purchase-text">Launching March 21, 2018</div> -->
           <div class="purchase-text purchase-pink">Space Quest Badge</div>
           <div class="purchase-text"><small class="purchase-small">Limited 10K Token release</small></div>
-          <div class="purchase-btn"><button>Buy</button></div>
+          <nuxt-link class="purchase-btn" to="/spacequest/getspace"><button>Buy</button></nuxt-link>
         </div>
       </div>
     </div>
@@ -35,6 +35,20 @@ export default {
     Navbar,
     SideNavbar,
     Footer,
+  },
+  head () {
+    return {
+      meta: [
+        { hid: 'og_title', property: 'og:title', content: 'Byzantine Space Quest' },
+        { hid: 'og_description', property: 'og:description', content: 'An interactive art game exploring space, time, and community.' },
+        { hid: 'og_image', property: 'og:image', content: require('~/assets/space_quest_thumbnail.png') },
+        { hid: 'og_url', property: 'og:url', content: 'https://byzantine.network/spacequest/start/' },
+        { hid: 'twitter_title', property: 'twitter:title', content: 'Byzantine Space Quest' },
+        { hid: 'twitter_description', property: 'twitter:description', content: 'An interactive art game exploring space, time, and community.' },
+        { hid: 'twitter_image', property: 'twitter:image', content: require('~/assets/space_quest_thumbnail.png') },
+        { hid: 'twitter_url', property: 'twitter:url', content: 'https://byzantine.network/spacequest/start/' }
+      ]
+    }
   }
 }
 
